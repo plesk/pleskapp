@@ -174,22 +174,46 @@ func (j jsonDatabases) DeployDatabase(
 	dbu types.DatabaseUser,
 	dbs types.DatabaseServer,
 	file string,
+	isWindows bool,
+	sysuser *string,
 ) error {
-	p := cliGateRequest{
-		Params: []string{
-			"--restore",
-			"--server=" + dbs.Host,
-			"--server-type=" + dbs.Type,
-			"--server-login=" + dbu.Login,
-			"--server-port=" + strconv.Itoa(dbs.Port),
-			"--database=" + db.Name,
-			"--backup-path=" + file,
-			// FIXME: Insecure, teach REST API to say sysuser name
-			"--sysuser=root",
-		},
-		Env: map[string]string{
-			"PSA_PASSWORD": dbu.Password,
-		},
+	var p cliGateRequest
+
+	if !isWindows {
+		s := "root"
+		if sysuser != nil {
+			s = *sysuser
+		}
+		p = cliGateRequest{
+			Params: []string{
+				"--restore",
+				"--server=" + dbs.Host,
+				"--server-type=" + dbs.Type,
+				"--server-login=" + dbu.Login,
+				"--server-port=" + strconv.Itoa(dbs.Port),
+				"--database=" + db.Name,
+				"--backup-path=" + file,
+				"--sysuser=" + s,
+			},
+			Env: map[string]string{
+				"PSA_PASSWORD": dbu.Password,
+			},
+		}
+	} else {
+		// FIXME: REST API seems to be unable to run dbbackup via pm_ApiCli::callSbin on Windows
+		p = cliGateRequest{
+			Params: []string{
+				"--restore",
+				"-server=" + dbs.Host,
+				"-server-type=" + dbs.Type,
+				"-server-login=" + dbu.Login,
+				"-server-pwd=" + dbu.Password,
+				"-port=" + strconv.Itoa(dbs.Port),
+				"-database=" + db.Name,
+				"-backup-path=" + file,
+			},
+			Env: map[string]string{},
+		}
 	}
 	jd, err := json.Marshal(&p)
 	if err != nil {

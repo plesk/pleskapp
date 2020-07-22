@@ -98,7 +98,14 @@ func DatabaseDeploy(host types.Server, domain types.Domain, db types.Database, f
 		config.SetDomain(host, domain)
 	}
 
-	return api.DeployDatabase(db, *dbu, *host.GetDatabaseServer(db.DatabaseServerID), file)
+	var s *string
+	apiD := factory.GetDomainManagement(host.GetServerAuth())
+	i, err := apiD.GetDomain(domain.Name)
+	if err == nil {
+		s = &i.Sysuser
+	}
+
+	return api.DeployDatabase(db, *dbu, *host.GetDatabaseServer(db.DatabaseServerID), file, host.Info.IsWindows, s)
 }
 
 func DatabaseDelete(host types.Server, dbn string) error {

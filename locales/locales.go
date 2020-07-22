@@ -137,8 +137,13 @@ func init() {
 			"debug.file.skip":     "Skipping file %s that exists on target (no overwrite specified)",
 
 			"api.errors.cligate.error.responce": "Execution failed with error code \"%d\", stdout: [%s], stderr: [%s]",
-			"api.errors.failed.request":         "Request failed with code %d: %s %s",
+			"api.errors.failed.request":         "Request failed with code \"%d\": Reason: \"%s\"; Errors: \"%s\"",
+			"api.errors.auth.wrong.pass":        "Could not authenticate on %s using provided password",
 			"api.errors.auth.failed.reauth":     "Could not authenticate using stored credentials, use \"servers reauth %s\" to fix",
+			"api.errors.auth.failed":            "Failed to acquire an API key using provided password: %s",
+			"api.errors.auth.cli.failed":        "Failed to acquire an API key using provided password: [%d: %s]",
+			"api.errors.domain.info.failed":     "Failed to get domain info: [%d: %s]",
+			"api.errors.domain.info.not.found":  "Failed to get domain info (no FTP Login field)",
 
 			"upload.dry.run.upload": "Dry run; would upload file %s to %s",
 		},

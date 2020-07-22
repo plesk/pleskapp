@@ -19,6 +19,7 @@ type DomainInfo struct {
 	ParentDomainID int
 	GUID           string
 	WWWRoot        string
+	Sysuser        string
 }
 
 type FTPManagement interface {
@@ -41,7 +42,7 @@ type DatabaseManagement interface {
 	ListDatabaseServers() ([]DatabaseServerInfo, error)
 	CreateDatabase(domain types.Domain, database types.NewDatabase, server types.DatabaseServer) (*DatabaseInfo, error)
 	RemoveDatabase(database types.Database) error
-	DeployDatabase(database types.Database, dbuser types.DatabaseUser, server types.DatabaseServer, filename string) error
+	DeployDatabase(database types.Database, dbuser types.DatabaseUser, server types.DatabaseServer, filename string, isWindows bool, sysuser *string) error
 }
 
 type DatabaseInfo struct {

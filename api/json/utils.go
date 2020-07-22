@@ -49,15 +49,23 @@ func tryParseResponceOrParseError(data []byte, something interface{}) (*jsonErro
 	return nil, nil
 }
 
-func doAndThenCheckAuthFailure(c *http.Client, req *http.Request, a string) (*http.Response, error) {
+func doAndThenCheckAuthFailure(c *http.Client, req *http.Request, a string, flags ...bool) (*http.Response, error) {
 	if utils.Log.HasDebug() {
 		data, _ := httputil.DumpRequestOut(req, true)
 		utils.Log.Debug(fmt.Sprintf("Sending a request %s", data))
 	}
 
 	res, err := c.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
 	if res.StatusCode == 403 || res.StatusCode == 401 {
-		err = errors.New(locales.L.Get("api.errors.auth.failed.reauth", a))
+		if len(flags) > 0 && flags[0] {
+			err = errors.New(locales.L.Get("api.errors.auth.wrong.pass", a))
+		} else {
+			err = errors.New(locales.L.Get("api.errors.auth.failed.reauth", a))
+		}
 	}
 
 	if utils.Log.HasDebug() {

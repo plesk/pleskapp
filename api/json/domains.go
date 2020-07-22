@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"git.plesk.ru/~abashurov/pleskapp/api"
 	"git.plesk.ru/~abashurov/pleskapp/features"
@@ -45,6 +46,61 @@ func NewDomains(a api.Auth) jsonDomains {
 		auth:   a,
 		client: getClient(a.GetIgnoreSsl()),
 	}
+}
+
+// TODO: Make sure REST API returns sysuser on GET /api/v2/domains
+func (j jsonDomains) getDomainSysUser(d string) (string, error) {
+	p := cliGateRequest{
+		Params: []string{
+			"--info",
+			d,
+		},
+		Env: map[string]string{},
+	}
+
+	jd, err := json.Marshal(p)
+	if err != nil {
+		return "", nil
+	}
+
+	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/cli/domain/call"), bytes.NewBuffer(jd))
+	if err != nil {
+		return "", nil
+	}
+	addBasicHeaders(req, j.auth.GetApiKey())
+
+	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
+	if err != nil {
+		return "", err
+	}
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var jRes cliGateResponce
+	e, err := tryParseResponceOrParseError(data, &jRes)
+	if err != nil {
+		return "", err
+	}
+
+	if jRes.Code == 0 && e == nil {
+		for _, l := range strings.Split(jRes.Stdout, "\n") {
+			if strings.HasPrefix(l, "FTP Login") {
+				p := strings.Split(l, " ")
+				return p[len(p)-1], nil
+			}
+		}
+
+		return "", errors.New(locales.L.Get("api.errors.domain.info.not.found"))
+	}
+
+	if jRes.Code != 0 && e == nil {
+		return "", errors.New(locales.L.Get("api.errors.cligate.error.responce", jRes.Code, jRes.Stdout, jRes.Stderr))
+	}
+
+	return "", errors.New(locales.L.Get("api.errors.domain.info.failed", e.Code, e.Message))
 }
 
 func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.DomainInfo, error) {
@@ -102,8 +158,6 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 
 	if e != nil || status.GUID == "" {
 		if e.Code != 0 || len(e.Errors) != 0 {
-			_ = j.RemoveDomain(d)
-
 			return nil, jsonErrorToError(*e)
 		}
 	}
@@ -188,6 +242,11 @@ func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
 		return api.DomainInfo{}, errors.New(locales.L.Get("errors.domain.unknown", d))
 	}
 
+	s, err := j.getDomainSysUser(d)
+	if err != nil {
+		return api.DomainInfo{}, err
+	}
+
 	return api.DomainInfo{
 		ID:             ds[0].ID,
 		Name:           ds[0].Name,
@@ -195,6 +254,7 @@ func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
 		ParentDomainID: ds[0].BaseDomainID,
 		GUID:           ds[0].GUID,
 		WWWRoot:        ds[0].WWWRoot,
+		Sysuser:        s,
 	}, nil
 }
 

@@ -97,7 +97,12 @@ func GenUsername(length int) string {
 
 func RequestPassword(reason string) (string, error) {
 	fmt.Println(reason)
-	return (bufio.NewReader(os.Stdin)).ReadString('\n')
+	str, err := (bufio.NewReader(os.Stdin)).ReadString('\n')
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(str), err
 }
 
 func strRev(s []rune) []rune {

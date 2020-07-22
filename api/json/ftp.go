@@ -23,6 +23,12 @@ type createFtpUserRequest struct {
 	Home         string          `json:"home"`
 	Quota        int             `json:"quota"`
 	ParentDomain domainReference `json:"parent_domain"`
+	Permissions  permissions     `json:"permissions"`
+}
+
+type permissions struct {
+	Read  string `json:"read"`
+	Write string `json:"write"`
 }
 
 type updateFtpUserRequest struct {
@@ -68,6 +74,10 @@ func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTP
 		Password: user.Password,
 		Home:     "/",
 		Quota:    -1,
+		Permissions: permissions{
+			Write: "true",
+			Read:  "true",
+		},
 		ParentDomain: domainReference{
 			Name: domain,
 		},

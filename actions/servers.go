@@ -51,11 +51,10 @@ func ServerAdd(host string, ignoreSsl bool) error {
 	if err == nil {
 		return fmt.Errorf("Server with address " + host + " is already registered")
 	}
-	pass := "setup1Q**"
-	//pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host)
-	//if err != nil {
-	//	return err
-	//}
+	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host)
+	if err != nil {
+		return err
+	}
 
 	auth := types.ServerAuth{
 		Address:   host,

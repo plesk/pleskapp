@@ -48,13 +48,13 @@ func UploadFileToRoot(host types.Server, domain types.Domain, ovw bool, file str
 		return "", err
 	}
 
-	connection, err := upload.Connect(*ftp, domain.Name, "/")
+	connection, err := upload.Connect(*ftp, host.Host, "/")
 	if err != nil {
 		return "", err
 	}
 
 	cr, f := utils.GetClientRootName(file)
-	return strings.Split(*path, *docroot)[0], connection.UploadFile(cr, "/", f, true)
+	return strings.Split(*path, *docroot)[0], connection.UploadFile(cr, "/", f, true, host.Info.IsWindows)
 }
 
 func UploadFile(host types.Server, domain types.Domain, ovw bool, file string) error {
@@ -63,13 +63,13 @@ func UploadFile(host types.Server, domain types.Domain, ovw bool, file string) e
 		return err
 	}
 
-	connection, err := upload.Connect(*ftp, domain.Name, *docroot)
+	connection, err := upload.Connect(*ftp, host.Host, *docroot)
 	if err != nil {
 		return err
 	}
 
 	cr, f := utils.GetClientRootName(file)
-	return connection.UploadFile(cr, *docroot, f, ovw)
+	return connection.UploadFile(cr, *docroot, f, ovw, host.Info.IsWindows)
 }
 
 func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool, dir string, root *string) error {
@@ -78,7 +78,7 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 		return err
 	}
 
-	connection, err := upload.Connect(*ftp, domain.Name, *docroot)
+	connection, err := upload.Connect(*ftp, host.Host, *docroot)
 	if err != nil {
 		return err
 	}
@@ -99,6 +99,6 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 			return nil
 		}
 
-		return connection.UploadFile(dir+"/", *serverPath+"/", pathPart, ovw)
+		return connection.UploadFile(dir+"/", *serverPath+"/", pathPart, ovw, host.Info.IsWindows)
 	})
 }

@@ -5,11 +5,13 @@ package json
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"git.plesk.ru/~abashurov/pleskapp/api"
+	"git.plesk.ru/~abashurov/pleskapp/locales"
 )
 
 type createApiKeyRequest struct {
@@ -97,7 +99,7 @@ func (j JsonAuth) GetAPIKey(preAuth api.PreAuth) (string, error) {
 	req.Header["Accept"] = []string{"application/json"}
 	req.SetBasicAuth(preAuth.GetLogin(), preAuth.GetPassword())
 
-	res, err := doAndThenCheckAuthFailure(j.client, req, api.GetApiUrl(preAuth, "/api/v2/cli/secret_key/call"))
+	res, err := doAndThenCheckAuthFailure(j.client, req, preAuth.GetAddress(), true)
 	if err != nil {
 		return "", err
 	}
@@ -113,10 +115,10 @@ func (j JsonAuth) GetAPIKey(preAuth api.PreAuth) (string, error) {
 	}
 
 	if jRes.Code != 0 && e == nil {
-		return "", fmt.Errorf("Failed to acquire an API key using provided password: " + jRes.Stderr)
+		return "", errors.New(locales.L.Get("api.errors.auth.failed", jRes.Stderr))
 	}
 
-	return "", fmt.Errorf("Failed to acquire an API key using provided password: [%d: %s]", e.Code, e.Message)
+	return "", errors.New(locales.L.Get("api.errors.auth.cli.failed", e.Code, e.Message))
 }
 
 func (j JsonAuth) GetLoginLink(auth api.Auth) (string, error) {

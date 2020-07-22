@@ -47,6 +47,7 @@ var uploadCmd = &cobra.Command{
 		cmd.SilenceUsage = true
 		path, err := actions.UploadFileToRoot(*server, *domain, true, args[3])
 		if err != nil {
+			utils.Log.Error(locales.L.Get("errors.execution.failed.generic", err.Error()))
 			return err
 		}
 

@@ -23,17 +23,25 @@ type ftpConnection struct {
 	cwd     string
 }
 
-func Connect(creds types.FtpUser, domain string, docRoot string) (*ftpConnection, error) {
+func Connect(creds types.FtpUser, server string, docRoot string) (*ftpConnection, error) {
 	var connection ftpConnection
-	var config = &tls.Config{
-		InsecureSkipVerify:    true,
-		VerifyPeerCertificate: nil,
-	}
 
-	inner, err := ftp.Dial(domain+":21", ftp.DialWithTimeout(15*time.Second), ftp.DialWithExplicitTLS(config))
+	kl, err := os.OpenFile("/home/abashurov/keylog_pleskapp", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return nil, err
 	}
+
+	var config = &tls.Config{
+		InsecureSkipVerify:    true,
+		VerifyPeerCertificate: nil,
+		KeyLogWriter:          kl,
+	}
+
+	inner, err := ftp.Dial(server+":21", ftp.DialWithTimeout(15*time.Second), ftp.DialWithExplicitTLS(config))
+	if err != nil {
+		return nil, err
+	}
+
 	err = inner.Login(creds.Login, creds.Password)
 	if err != nil {
 		return nil, err
@@ -96,7 +104,13 @@ func (c *ftpConnection) findFile(path string, fileName string) (*ftp.Entry, erro
 	return nil, err
 }
 
-func (c *ftpConnection) UploadFile(clientRoot string, serverRoot string, fileName string, overwrite bool) error {
+func (c *ftpConnection) UploadFile(
+	clientRoot string,
+	serverRoot string,
+	fileName string,
+	overwrite bool,
+	isWindows bool,
+) error {
 	c.active.Lock()
 	defer c.active.Unlock()
 
