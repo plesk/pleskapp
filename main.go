@@ -32,6 +32,7 @@ func main() {
 	exitCode := 0
 	err = cmd.Execute()
 	if err != nil {
+		fmt.Println(err.Error())
 		exitCode = 1
 	}
 
