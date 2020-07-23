@@ -11,11 +11,11 @@ import (
 	"strconv"
 	"strings"
 
-	"git.plesk.ru/~abashurov/pleskapp/api"
-	"git.plesk.ru/~abashurov/pleskapp/features"
-	"git.plesk.ru/~abashurov/pleskapp/locales"
-	"git.plesk.ru/~abashurov/pleskapp/types"
-	"git.plesk.ru/~abashurov/pleskapp/utils"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/features"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
 type jsonDomains struct {

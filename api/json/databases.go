@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"git.plesk.ru/~abashurov/pleskapp/api"
-	"git.plesk.ru/~abashurov/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
 )
 
 type jsonDatabases struct {

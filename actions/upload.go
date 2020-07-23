@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.plesk.ru/~abashurov/pleskapp/api/factory"
-	"git.plesk.ru/~abashurov/pleskapp/locales"
-	"git.plesk.ru/~abashurov/pleskapp/types"
-	"git.plesk.ru/~abashurov/pleskapp/upload"
-	"git.plesk.ru/~abashurov/pleskapp/utils"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/upload"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
 func getPrereq(host types.Server, domain types.Domain) (*types.FtpUser, *string, *string, error) {

@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"git.plesk.ru/~abashurov/pleskapp/api"
-	"git.plesk.ru/~abashurov/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
 )
 
 type jsonFTPUsers struct {

@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"git.plesk.ru/~abashurov/pleskapp/api"
-	"git.plesk.ru/~abashurov/pleskapp/api/factory"
-	"git.plesk.ru/~abashurov/pleskapp/config"
-	"git.plesk.ru/~abashurov/pleskapp/types"
-	"git.plesk.ru/~abashurov/pleskapp/utils"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/config"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
 func getServerInfo(a types.ServerAuth) (*api.ServerInfo, *types.ServerIPAddresses, *[]types.DatabaseServer, error) {

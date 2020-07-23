@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"git.plesk.ru/~abashurov/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
 )
 
 func FilterDomains(elements []types.Domain, filterOut string) ([]types.Domain, []types.Domain) {

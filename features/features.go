@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"git.plesk.ru/~abashurov/pleskapp/locales"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
 )
 
 type Feature string

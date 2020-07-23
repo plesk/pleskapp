@@ -3,8 +3,8 @@
 package factory
 
 import (
-	"git.plesk.ru/~abashurov/pleskapp/api"
-	"git.plesk.ru/~abashurov/pleskapp/api/json"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api/json"
 )
 
 func GetDomainManagement(a api.Auth) api.DomainManagement {

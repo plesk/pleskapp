@@ -8,10 +8,10 @@ import (
 	"io/ioutil"
 	"os"
 
-	"git.plesk.ru/~abashurov/pleskapp/api/factory"
-	"git.plesk.ru/~abashurov/pleskapp/locales"
-	"git.plesk.ru/~abashurov/pleskapp/types"
-	"git.plesk.ru/~abashurov/pleskapp/utils"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
 func AppAdd(features []string, subdir string, path string, overwrite bool) error {

@@ -9,8 +9,8 @@ import (
 	"os"
 	"sync"
 
-	"git.plesk.ru/~abashurov/pleskapp/types"
-	"git.plesk.ru/~abashurov/pleskapp/utils"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
 var globalConfig config = config{}
