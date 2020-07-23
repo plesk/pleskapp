@@ -68,7 +68,7 @@ func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) er
 
 func DomainList(host types.Server) error {
 	for _, domain := range host.Domains {
-		utils.Log.Print(fmt.Sprintf("%s\t%s\n", domain.Name, domain.GUID))
+		utils.Log.Print(fmt.Sprintf("Name: %s\nGUID: %s\n\n", domain.Name, domain.GUID))
 	}
 
 	return nil

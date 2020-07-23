@@ -5,6 +5,7 @@ package features
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 
 	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
 )
@@ -66,7 +67,12 @@ func (f FeatureProvider) GetFeaturePackage(domain string, feature Feature) ([]by
 	case Php71:
 		fallthrough
 	case Php70:
-		packet["params"] = []string{"--update", domain, "-php", "true", "-php_handler_id", "plesk-" + string(feature) + "-fpm"}
+		if !f.IsWindows {
+			packet["params"] = []string{"--update", domain, "-php", "true", "-php_handler_id", "plesk-" + string(feature) + "-fpm"}
+		} else {
+			ver := strings.Split(strings.TrimPrefix(string(feature), "php"), "")
+			packet["params"] = []string{"--update", domain, "-php", "true", "-php_handler_id", "fastcgi-" + ver[0] + "." + ver[1]}
+		}
 	case Nginx:
 		if f.IsWindows {
 			return []byte{}, errors.New(locales.L.Get("errors.feature.not.supported", string(feature)))

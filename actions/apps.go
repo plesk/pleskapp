@@ -11,10 +11,16 @@ import (
 	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
 	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
 	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
 )
 
-func AppAdd(features []string, subdir string, path string, overwrite bool) error {
+func AppAdd(
+	host types.Server,
+	domain types.Domain,
+	features []string,
+	subdir string,
+	path string,
+	overwrite bool,
+) error {
 	d, err := os.Stat(path)
 	if err != nil {
 		return err
@@ -34,6 +40,8 @@ func AppAdd(features []string, subdir string, path string, overwrite bool) error
 	a := types.App{
 		TargetPath: subdir,
 		Features:   features,
+		Server:     host.Host,
+		Domain:     domain.Name,
 	}
 	aj, err := json.Marshal(a)
 	if err != nil {
@@ -45,34 +53,15 @@ func AppAdd(features []string, subdir string, path string, overwrite bool) error
 	return nil
 }
 
-func AppDeploy(host types.Server, path string, domain types.Domain) error {
-	d, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-
-	if !d.IsDir() {
-		return errors.New(locales.L.Get("errors.path.is.not.directory", path))
-	}
-
-	var c types.App
-	f, err := ioutil.ReadFile(path + "/.pleskapp")
-	if err == nil {
-		err = json.Unmarshal(f, &c)
-		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.cannot.parse.config", path+"/.pleskapp"))
-			c = types.App{}
-		}
-	}
-
+func AppDeploy(host types.Server, app types.App, path string, domain types.Domain) error {
 	api := factory.GetDomainManagement(host.GetServerAuth())
-	err = api.AddDomainFeatures(domain.Name, c.Features)
+	err := api.AddDomainFeatures(domain.Name, app.Features)
 	if err != nil {
 		return err
 	}
 
-	if c.TargetPath != "" {
-		return UploadDirectory(host, domain, true, false, path, &c.TargetPath)
+	if app.TargetPath != "" {
+		return UploadDirectory(host, domain, true, false, path, &app.TargetPath)
 	}
 
 	return UploadDirectory(host, domain, true, false, path, nil)

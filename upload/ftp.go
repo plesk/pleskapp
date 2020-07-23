@@ -172,7 +172,7 @@ func (c *ftpConnection) UploadFile(
 		if err != nil {
 			utils.Log.Error(locales.L.Get("errors.stor.failed", clientRoot+baseName, err.Error()))
 		} else {
-			utils.Log.Debug(locales.L.Get("debug.stor.success", clientRoot+baseName))
+			utils.Log.Print(locales.L.Get("debug.stor.success", clientRoot+baseName))
 		}
 	}
 

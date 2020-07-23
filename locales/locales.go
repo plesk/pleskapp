@@ -40,10 +40,10 @@ func init() {
 	defs = map[string]map[string]string{
 		"en_US": {
 			"app.description":                   "Manage local applications",
-			"app.deploy.cmd":                    "deploy [SERVER] [DOMAIN] [PATH]",
-			"app.deploy.description":            "Deploy application in PATH to DOMAIN on SERVER",
+			"app.deploy.cmd":                    "deploy [PATH]",
+			"app.deploy.description":            "Deploy application in set PATH to DOMAIN on SERVER",
 			"app.deploy.success":                "Application successfully deployed",
-			"app.register.cmd":                  "register [PATH]",
+			"app.register.cmd":                  "register [SERVER] [DOMAIN] [PATH]",
 			"app.register.description":          "Register a new appliation in the specified path",
 			"app.register.success":              "New app registered",
 			"app.register.features.flag":        "Features necessary for the application",

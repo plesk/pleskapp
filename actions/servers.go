@@ -93,18 +93,14 @@ func ServerLogin(host types.Server) error {
 }
 
 func ServerList() error {
-	servers := config.GetServers()
-
-	fmt.Printf("Address\tVersion\tAPI key\tIP v4\tIP v6\n")
-	for i := 0; i < len(servers); i++ {
-		server := servers[i]
+	for _, i := range config.GetServers() {
 		fmt.Printf(
-			"%s\t%s\t%s\t%s\t%s\n",
-			server.Host,
-			server.Info.Version,
-			server.APIKey,
-			server.Info.IP.IPv4,
-			server.Info.IP.IPv6,
+			"Address: %s\nVersion: %s\nAPI key: %s\nIPv4: %s\nIPv6: %s\n\n",
+			i.Host,
+			i.Info.Version,
+			i.APIKey,
+			i.Info.IP.IPv4,
+			i.Info.IP.IPv6,
 		)
 	}
 

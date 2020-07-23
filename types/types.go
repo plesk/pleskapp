@@ -68,6 +68,8 @@ type Domain struct {
 type App struct {
 	TargetPath string   `json:"target_path"`
 	Features   []string `json:"features"`
+	Server     string   `json:"server"`
+	Domain     string   `json:"domain"`
 }
 
 type Config struct {

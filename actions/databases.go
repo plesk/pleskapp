@@ -61,7 +61,7 @@ func DatabaseList(host types.Server, domain types.Domain) error {
 	}
 
 	for _, i := range dbs {
-		fmt.Printf("%d\t%s\t%s\t%d\t%d\n", i.ID, i.Name, i.Type, i.ParentDomainID, i.DatabaseServerID)
+		fmt.Printf("ID: %d\nName: %s\nType: %s\nParent Domain: %d\nDatabase Server: %d\n\n", i.ID, i.Name, i.Type, i.ParentDomainID, i.DatabaseServerID)
 	}
 	return nil
 }
