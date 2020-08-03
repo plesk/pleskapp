@@ -25,16 +25,9 @@ type ftpConnection struct {
 
 func Connect(creds types.FtpUser, server string, docRoot string) (*ftpConnection, error) {
 	var connection ftpConnection
-
-	kl, err := os.OpenFile("/home/abashurov/keylog_pleskapp", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if err != nil {
-		return nil, err
-	}
-
 	var config = &tls.Config{
 		InsecureSkipVerify:    true,
 		VerifyPeerCertificate: nil,
-		KeyLogWriter:          kl,
 	}
 
 	inner, err := ftp.Dial(server+":21", ftp.DialWithTimeout(15*time.Second), ftp.DialWithExplicitTLS(config))

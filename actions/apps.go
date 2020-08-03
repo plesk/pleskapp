@@ -55,7 +55,7 @@ func AppAdd(
 
 func AppDeploy(host types.Server, app types.App, path string, domain types.Domain) error {
 	api := factory.GetDomainManagement(host.GetServerAuth())
-	err := api.AddDomainFeatures(domain.Name, app.Features)
+	err := api.AddDomainFeatures(domain.Name, app.Features, host.Info.IsWindows)
 	if err != nil {
 		return err
 	}

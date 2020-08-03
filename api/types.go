@@ -6,7 +6,7 @@ import "github.com/plesk/pleskapp/plesk/types"
 
 type DomainManagement interface {
 	CreateDomain(domain string, ipAddresses types.ServerIPAddresses) (*DomainInfo, error)
-	AddDomainFeatures(domain string, features []string) error
+	AddDomainFeatures(domain string, features []string, isWin bool) error
 	RemoveDomain(domain string) error
 	GetDomain(domain string) (DomainInfo, error)
 	ListDomains() ([]DomainInfo, error)
@@ -76,7 +76,7 @@ type DatabaseUserInfo struct {
 }
 
 type Authentication interface {
-	GetAPIKey(preAuth PreAuth) (string, error)
+	GetAPIKey(auth Auth) (string, error)
 	GetLoginLink(auth Auth) (string, error)
 	RemoveAPIKey(auth Auth) (string, error)
 }
@@ -100,23 +100,7 @@ type Auth interface {
 	GetPort() string
 	GetIgnoreSsl() bool
 	GetIsWindows() bool
-	GetApiKey() string
-}
-
-type PreAuth interface {
-	GetAddress() string
-	GetPort() string
-	GetIgnoreSsl() bool
-	GetIsWindows() bool
-	GetLogin() string
-	GetPassword() string
-}
-
-type HasApiUrlComponents interface {
-	GetAddress() string
-	GetPort() string
-}
-
-func GetApiUrl(a HasApiUrlComponents, path string) string {
-	return "https://" + a.GetAddress() + ":" + a.GetPort() + path
+	GetApiKey() *string
+	GetLogin() *string
+	GetPassword() *string
 }

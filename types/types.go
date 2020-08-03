@@ -20,7 +20,7 @@ func (s Server) GetServerAuth() ServerAuth {
 		Port:      "8443",
 		IgnoreSsl: s.IgnoreSsl,
 		IsWindows: s.Info.IsWindows,
-		APIKey:    s.APIKey,
+		APIKey:    &s.APIKey,
 	}
 }
 
@@ -124,9 +124,9 @@ type ServerAuth struct {
 	Port      string
 	IgnoreSsl bool
 	IsWindows bool
-	Login     string
-	Password  string
-	APIKey    string
+	Login     *string
+	Password  *string
+	APIKey    *string
 }
 
 // GetAddress impl Auth
@@ -142,10 +142,10 @@ func (a ServerAuth) GetIgnoreSsl() bool { return a.IgnoreSsl }
 func (a ServerAuth) GetIsWindows() bool { return a.IsWindows }
 
 // GetLogin impl Auth
-func (a ServerAuth) GetLogin() string { return a.Login }
+func (a ServerAuth) GetLogin() *string { return a.Login }
 
 // GetPassword impl Auth
-func (a ServerAuth) GetPassword() string { return a.Password }
+func (a ServerAuth) GetPassword() *string { return a.Password }
 
 // GetApiKey impl Auth
-func (a ServerAuth) GetApiKey() string { return a.APIKey }
+func (a ServerAuth) GetApiKey() *string { return a.APIKey }

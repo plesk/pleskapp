@@ -25,7 +25,7 @@ var deleteCmd = &cobra.Command{
 			if err != nil {
 				utils.Log.Error(locales.L.Get("errors.server.remove.failure", host, err.Error()))
 			} else {
-				utils.Log.Print(locales.L.Get("server.delete.success"))
+				utils.Log.PrintL("server.delete.success")
 			}
 		}
 	},

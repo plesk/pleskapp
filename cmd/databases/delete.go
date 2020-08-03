@@ -20,7 +20,13 @@ var deleteCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("database.delete.success", nil, actions.DatabaseDelete(*server, args[1]))
+		err = actions.DatabaseDelete(*server, args[1])
+
+		if err == nil {
+			utils.Log.PrintL("database.delete.success", args[1])
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(2),
 }

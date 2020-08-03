@@ -13,15 +13,21 @@ var registerCmd = &cobra.Command{
 	Use:   locales.L.Get("server.register.cmd"),
 	Short: locales.L.Get("server.register.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ignoreSsl, _ := cmd.Flags().GetBool("ignoreSsl")
+		ignoreSsl, _ := cmd.Flags().GetBool("ignore-ssl")
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("server.register.success", nil, actions.ServerAdd(args[0], ignoreSsl))
+		err := actions.ServerAdd(args[0], ignoreSsl)
+
+		if err == nil {
+			utils.Log.PrintL("server.register.success")
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(1),
 }
 
 func init() {
-	registerCmd.Flags().BoolP("ignoreSsl", "s", false, locales.L.Get("server.register.ignore.ssl.flag"))
+	registerCmd.Flags().BoolP("ignore-ssl", "s", true, locales.L.Get("server.register.ignore.ssl.flag"))
 	ServersCmd.AddCommand(registerCmd)
 }

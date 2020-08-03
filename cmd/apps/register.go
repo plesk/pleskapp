@@ -50,7 +50,13 @@ var registerCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("app.register.success", nil, actions.AppAdd(*server, *domain, kFeat, sPath, path, overwrite))
+		err = actions.AppAdd(*server, *domain, kFeat, sPath, path, overwrite)
+
+		if err == nil {
+			utils.Log.PrintL("app.register.success", path)
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(3),
 }

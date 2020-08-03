@@ -6,7 +6,6 @@ import (
 	"github.com/plesk/pleskapp/plesk/actions"
 	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
-	"github.com/plesk/pleskapp/plesk/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -20,12 +19,7 @@ var loginCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		err = actions.ServerLogin(*server)
-
-		if err != nil {
-			utils.Log.Print(locales.L.Get("errors.execution.failed.generic", err.Error()))
-		}
-		return err
+		return actions.ServerLogin(*server)
 	},
 	Args: cobra.ExactArgs(1),
 }
