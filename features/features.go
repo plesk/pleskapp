@@ -1,4 +1,4 @@
-// Copyright 1999-2020. Plesk International GmbH. All rights reserved.
+// Copyright 1999-2020. Plesk International GmbH.
 
 package features
 
