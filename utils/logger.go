@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/plesk/pleskapp/locales"
+	"github.com/plesk/pleskapp/plesk/locales"
 )
 
 var Log *logger

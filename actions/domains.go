@@ -6,11 +6,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/plesk/pleskapp/api/factory"
-	"github.com/plesk/pleskapp/config"
-	"github.com/plesk/pleskapp/locales"
-	"github.com/plesk/pleskapp/types"
-	"github.com/plesk/pleskapp/utils"
+	"github.com/plesk/pleskapp/plesk/api/factory"
+	"github.com/plesk/pleskapp/plesk/config"
+	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/types"
+	"github.com/plesk/pleskapp/plesk/utils"
 )
 
 func validateIps(val types.ServerIPAddresses, comp types.ServerIPAddresses) (bool, bool) {

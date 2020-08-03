@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/plesk/pleskapp/api"
-	"github.com/plesk/pleskapp/types"
+	"github.com/plesk/pleskapp/plesk/api"
+	"github.com/plesk/pleskapp/plesk/types"
 )
 
 type jsonInfo struct {

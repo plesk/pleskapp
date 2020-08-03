@@ -9,11 +9,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/plesk/pleskapp/actions"
-	"github.com/plesk/pleskapp/config"
-	"github.com/plesk/pleskapp/locales"
-	"github.com/plesk/pleskapp/types"
-	"github.com/plesk/pleskapp/utils"
+	"github.com/plesk/pleskapp/plesk/actions"
+	"github.com/plesk/pleskapp/plesk/config"
+	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/types"
+	"github.com/plesk/pleskapp/plesk/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -43,14 +43,14 @@ var deployCmd = &cobra.Command{
 		}
 
 		var c types.App
-		f, err := ioutil.ReadFile(path + "/.pleskapp")
+		f, err := ioutil.ReadFile(path + "/.plesk")
 		if err != nil {
-			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.pleskapp"))
+			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.plesk"))
 		}
 
 		err = json.Unmarshal(f, &c)
 		if err != nil {
-			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.pleskapp"))
+			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.plesk"))
 		}
 
 		server, err := config.GetServer(c.Server)

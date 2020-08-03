@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/plesk/pleskapp/cmd"
-	"github.com/plesk/pleskapp/config"
+	"github.com/plesk/pleskapp/plesk/cmd"
+	"github.com/plesk/pleskapp/plesk/config"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 		panic(fmt.Errorf("Failed obtaining current user home directory: %s", err))
 	}
 
-	path := home + "/.pleskapprc"
+	path := home + "/.pleskrc"
 
 	f, err := os.Open(path)
 	if err != nil {

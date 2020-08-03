@@ -3,18 +3,18 @@
 package cmd
 
 import (
-	appsCmd "github.com/plesk/pleskapp/cmd/apps"
-	databasesCmd "github.com/plesk/pleskapp/cmd/databases"
-	domainsCmd "github.com/plesk/pleskapp/cmd/domains"
-	serversCmd "github.com/plesk/pleskapp/cmd/servers"
-	syncCmd "github.com/plesk/pleskapp/cmd/sync"
-	"github.com/plesk/pleskapp/utils"
+	appsCmd "github.com/plesk/pleskapp/plesk/cmd/apps"
+	databasesCmd "github.com/plesk/pleskapp/plesk/cmd/databases"
+	domainsCmd "github.com/plesk/pleskapp/plesk/cmd/domains"
+	serversCmd "github.com/plesk/pleskapp/plesk/cmd/servers"
+	syncCmd "github.com/plesk/pleskapp/plesk/cmd/sync"
+	"github.com/plesk/pleskapp/plesk/utils"
 
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:           "pleskapp",
+	Use:           "plesk",
 	Short:         "Manage Plesk servers from the local system",
 	SilenceErrors: true,
 }
