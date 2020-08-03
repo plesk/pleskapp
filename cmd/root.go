@@ -14,7 +14,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:           "pleskapp",
+	Use:           "plesk",
 	Short:         "Manage Plesk servers from the local system",
 	SilenceErrors: true,
 }

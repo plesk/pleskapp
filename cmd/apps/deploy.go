@@ -43,14 +43,14 @@ var deployCmd = &cobra.Command{
 		}
 
 		var c types.App
-		f, err := ioutil.ReadFile(path + "/.pleskapp")
+		f, err := ioutil.ReadFile(path + "/.plesk")
 		if err != nil {
-			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.pleskapp"))
+			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.plesk"))
 		}
 
 		err = json.Unmarshal(f, &c)
 		if err != nil {
-			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.pleskapp"))
+			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.plesk"))
 		}
 
 		server, err := config.GetServer(c.Server)

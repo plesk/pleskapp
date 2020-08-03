@@ -31,9 +31,9 @@ func AppAdd(
 	}
 
 	if !overwrite {
-		_, err := os.Stat(path + "/.pleskapp")
+		_, err := os.Stat(path + "/.plesk")
 		if err == nil {
-			return errors.New(locales.L.Get("errors.path.already.exists", path+"/.pleskapp"))
+			return errors.New(locales.L.Get("errors.path.already.exists", path+"/.plesk"))
 		}
 	}
 
@@ -48,7 +48,7 @@ func AppAdd(
 		return err
 	}
 
-	ioutil.WriteFile(path+"/.pleskapp", aj, 0600)
+	ioutil.WriteFile(path+"/.plesk", aj, 0600)
 
 	return nil
 }

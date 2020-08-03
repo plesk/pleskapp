@@ -16,7 +16,7 @@ func main() {
 		panic(fmt.Errorf("Failed obtaining current user home directory: %s", err))
 	}
 
-	path := home + "/.pleskapprc"
+	path := home + "/.pleskrc"
 
 	f, err := os.Open(path)
 	if err != nil {
