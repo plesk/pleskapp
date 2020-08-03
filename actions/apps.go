@@ -8,9 +8,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
+	"github.com/plesk/pleskapp/api/factory"
+	"github.com/plesk/pleskapp/locales"
+	"github.com/plesk/pleskapp/types"
 )
 
 func AppAdd(

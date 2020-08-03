@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"git.plesk.ru/projects/SBX/repos/pleskapp/actions"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/config"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
+	"github.com/plesk/pleskapp/actions"
+	"github.com/plesk/pleskapp/api/factory"
+	"github.com/plesk/pleskapp/config"
+	"github.com/plesk/pleskapp/locales"
+	"github.com/plesk/pleskapp/utils"
 	"github.com/spf13/cobra"
 )
 

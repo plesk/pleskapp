@@ -3,12 +3,12 @@
 package cmd
 
 import (
-	appsCmd "git.plesk.ru/projects/SBX/repos/pleskapp/cmd/apps"
-	databasesCmd "git.plesk.ru/projects/SBX/repos/pleskapp/cmd/databases"
-	domainsCmd "git.plesk.ru/projects/SBX/repos/pleskapp/cmd/domains"
-	serversCmd "git.plesk.ru/projects/SBX/repos/pleskapp/cmd/servers"
-	syncCmd "git.plesk.ru/projects/SBX/repos/pleskapp/cmd/sync"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
+	appsCmd "github.com/plesk/pleskapp/cmd/apps"
+	databasesCmd "github.com/plesk/pleskapp/cmd/databases"
+	domainsCmd "github.com/plesk/pleskapp/cmd/domains"
+	serversCmd "github.com/plesk/pleskapp/cmd/servers"
+	syncCmd "github.com/plesk/pleskapp/cmd/sync"
+	"github.com/plesk/pleskapp/utils"
 
 	"github.com/spf13/cobra"
 )

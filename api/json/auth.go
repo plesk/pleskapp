@@ -10,8 +10,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/locales"
+	"github.com/plesk/pleskapp/api"
+	"github.com/plesk/pleskapp/locales"
 )
 
 type createApiKeyRequest struct {

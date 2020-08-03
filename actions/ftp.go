@@ -3,10 +3,10 @@
 package actions
 
 import (
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/config"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
+	"github.com/plesk/pleskapp/api/factory"
+	"github.com/plesk/pleskapp/config"
+	"github.com/plesk/pleskapp/types"
+	"github.com/plesk/pleskapp/utils"
 )
 
 func FindCachedFtpUser(domain types.Domain) *types.FtpUser {

@@ -2,7 +2,7 @@
 
 package types
 
-import "git.plesk.ru/projects/SBX/repos/pleskapp/locales"
+import "github.com/plesk/pleskapp/locales"
 
 type ObjectNotFound struct {
 	Object     string

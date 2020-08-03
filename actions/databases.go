@@ -5,11 +5,11 @@ package actions
 import (
 	"fmt"
 
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/api/factory"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/config"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/types"
-	"git.plesk.ru/projects/SBX/repos/pleskapp/utils"
+	"github.com/plesk/pleskapp/api"
+	"github.com/plesk/pleskapp/api/factory"
+	"github.com/plesk/pleskapp/config"
+	"github.com/plesk/pleskapp/types"
+	"github.com/plesk/pleskapp/utils"
 )
 
 func DatabaseFindNonLocal(api api.DatabaseManagement, host types.Server, dbn string) (*types.Database, error) {

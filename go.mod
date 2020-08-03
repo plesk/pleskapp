@@ -1,6 +1,6 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
-module git.plesk.ru/projects/SBX/repos/pleskapp
+module github.com/plesk/pleskapp
 
 go 1.14
 
