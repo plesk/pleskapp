@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/plesk/pleskapp/cmd"
-	"github.com/plesk/pleskapp/config"
+	"github.com/plesk/pleskapp/plesk/cmd"
+	"github.com/plesk/pleskapp/plesk/config"
 )
 
 func main() {

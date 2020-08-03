@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/jlaffaye/ftp"
-	"github.com/plesk/pleskapp/locales"
-	"github.com/plesk/pleskapp/types"
-	"github.com/plesk/pleskapp/utils"
+	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/types"
+	"github.com/plesk/pleskapp/plesk/utils"
 )
 
 type ftpConnection struct {

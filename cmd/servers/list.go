@@ -3,8 +3,8 @@
 package cmd
 
 import (
-	"github.com/plesk/pleskapp/actions"
-	"github.com/plesk/pleskapp/locales"
+	"github.com/plesk/pleskapp/plesk/actions"
+	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/spf13/cobra"
 )
 

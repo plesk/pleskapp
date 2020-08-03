@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/plesk/pleskapp/actions"
-	"github.com/plesk/pleskapp/config"
-	"github.com/plesk/pleskapp/locales"
-	"github.com/plesk/pleskapp/utils"
+	"github.com/plesk/pleskapp/plesk/actions"
+	"github.com/plesk/pleskapp/plesk/config"
+	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/utils"
 	"github.com/spf13/cobra"
 )
 

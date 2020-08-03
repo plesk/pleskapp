@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/plesk/pleskapp/types"
+	"github.com/plesk/pleskapp/plesk/types"
 )
 
 var localConfig config = config{}

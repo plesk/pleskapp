@@ -11,8 +11,8 @@ import (
 	"net/http/httputil"
 	"reflect"
 
-	"github.com/plesk/pleskapp/locales"
-	"github.com/plesk/pleskapp/utils"
+	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/utils"
 )
 
 func getClient(ignoreSsl bool) *http.Client {
