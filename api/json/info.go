@@ -3,18 +3,13 @@
 package json
 
 import (
-	"bytes"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-
+	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/api"
 	"github.com/plesk/pleskapp/plesk/types"
 )
 
 type jsonInfo struct {
-	auth   api.Auth
-	client *http.Client
+	client *resty.Client
 }
 
 type serverInfo struct {
@@ -37,89 +32,70 @@ type serverIPAddresses struct {
 	Type      string `json:"type"`
 }
 
-func NewInfo(a api.Auth) jsonInfo {
+func NewInfo(c *resty.Client) jsonInfo {
 	return jsonInfo{
-		auth:   a,
-		client: getClient(a.GetIgnoreSsl()),
+		client: c,
 	}
 }
 
 func (j jsonInfo) GetInfo() (api.ServerInfo, error) {
-	req, err := http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/server"), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetResult(&serverInfo{}).
+		SetError(&jsonError{}).
+		Get("/api/v2/server")
+
 	if err != nil {
 		return api.ServerInfo{}, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return api.ServerInfo{}, err
+	if res.IsSuccess() {
+		var r *serverInfo = res.Result().(*serverInfo)
+		return api.ServerInfo{
+			IsWindows: r.Platform == "Windows",
+			Version:   r.PanelVersion + "." + r.PanelUpdateVersion,
+		}, nil
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return api.ServerInfo{}, err
+	if res.StatusCode() == 403 {
+		return api.ServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var info serverInfo
-	e, err := tryParseResponceOrParseError(d, &info)
-	if err != nil {
-		return api.ServerInfo{}, err
-	}
-
-	if e != nil {
-		return api.ServerInfo{}, fmt.Errorf("Failed to check server version using provided API key: [%d: %s]", e.Code, e.Message)
-	}
-
-	return api.ServerInfo{
-		IsWindows: info.Platform == "Windows",
-		Version:   info.PanelVersion + "." + info.PanelUpdateVersion,
-	}, nil
+	var r *jsonError = res.Error().(*jsonError)
+	return api.ServerInfo{}, jsonErrorToError(*r)
 }
 
 func (j jsonInfo) GetIpAddresses() (types.ServerIPAddresses, error) {
-	ipAddresses := types.ServerIPAddresses{
-		IPv4: []string{},
-		IPv6: []string{},
-	}
+	res, err := j.client.R().
+		SetResult([]serverIPAddresses{}).
+		SetError(&jsonError{}).
+		Get("/api/v2/server/ips")
 
-	var req, err = http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/server/ips"), bytes.NewBuffer([]byte{}))
 	if err != nil {
-		return ipAddresses, err
+		return types.ServerIPAddresses{}, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return ipAddresses, err
-	}
-
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return ipAddresses, err
-	}
-
-	var addr []serverIPAddresses
-
-	e, err := tryParseResponceOrParseError(d, &addr)
-	if err != nil {
-		return ipAddresses, err
-	}
-
-	if e != nil {
-		return ipAddresses, fmt.Errorf("Failed to check server version using provided API key: [%d: %s]", e.Code, e.Message)
-	}
-
-	for _, a := range addr {
-		if a.IPv4 != "" {
-			ipAddresses.IPv4 = append(ipAddresses.IPv4, a.IPv4)
+	if res.IsSuccess() {
+		var r *[]serverIPAddresses = res.Result().(*[]serverIPAddresses)
+		ip := types.ServerIPAddresses{
+			IPv4: []string{},
+			IPv6: []string{},
 		}
-		if a.IPv6 != "" {
-			ipAddresses.IPv6 = append(ipAddresses.IPv6, a.IPv6)
+		for _, a := range *r {
+			if a.IPv4 != "" {
+				ip.IPv4 = append(ip.IPv4, a.IPv4)
+			}
+			if a.IPv6 != "" {
+				ip.IPv6 = append(ip.IPv6, a.IPv6)
+			}
 		}
+
+		return ip, nil
 	}
 
-	return ipAddresses, nil
+	if res.StatusCode() == 403 {
+		return types.ServerIPAddresses{}, authError{server: j.client.HostURL, needReauth: true}
+	}
+
+	var r *jsonError = res.Error().(*jsonError)
+	return types.ServerIPAddresses{}, jsonErrorToError(*r)
 }

@@ -23,6 +23,7 @@ var listCmd = &cobra.Command{
 			return err
 		}
 
+		cmd.SilenceUsage = true
 		return actions.DatabaseList(*server, *domain)
 	},
 	Args: cobra.ExactArgs(2),

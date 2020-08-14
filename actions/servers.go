@@ -13,6 +13,8 @@ import (
 	"github.com/plesk/pleskapp/plesk/utils"
 )
 
+const ADMIN_USER = "admin"
+
 func getServerInfo(a types.ServerAuth) (*api.ServerInfo, *types.ServerIPAddresses, *[]types.DatabaseServer, error) {
 	apiI := factory.GetServerInfo(a)
 	info, err := apiI.GetInfo()
@@ -51,6 +53,7 @@ func ServerAdd(host string, ignoreSsl bool) error {
 	if err == nil {
 		return fmt.Errorf("Server with address " + host + " is already registered")
 	}
+	login := ADMIN_USER
 	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host)
 	if err != nil {
 		return err
@@ -61,8 +64,8 @@ func ServerAdd(host string, ignoreSsl bool) error {
 		Port:      "8443",
 		IgnoreSsl: ignoreSsl,
 		IsWindows: false,
-		Login:     "admin",
-		Password:  pass,
+		Login:     &login,
+		Password:  &pass,
 	}
 
 	apiA := factory.GetAuthentication(auth)
@@ -71,11 +74,11 @@ func ServerAdd(host string, ignoreSsl bool) error {
 		return err
 	}
 
-	auth.APIKey = key
+	auth.APIKey = &key
 	h := types.Server{
 		Host:      auth.Address,
 		IgnoreSsl: auth.IgnoreSsl,
-		APIKey:    auth.APIKey,
+		APIKey:    *auth.APIKey,
 	}
 	return ServerUpdate(h)
 }
@@ -127,6 +130,7 @@ func ServerUpdate(host types.Server) error {
 }
 
 func ServerReauth(host types.Server) error {
+	login := "admin"
 	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host.Host)
 	if err != nil {
 		return err
@@ -137,8 +141,8 @@ func ServerReauth(host types.Server) error {
 		Port:      "8443",
 		IgnoreSsl: host.IgnoreSsl,
 		IsWindows: false,
-		Login:     "admin",
-		Password:  pass,
+		Login:     &login,
+		Password:  &pass,
 	}
 
 	apiA := factory.GetAuthentication(auth)

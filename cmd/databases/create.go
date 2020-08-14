@@ -55,7 +55,13 @@ var createCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("database.create.success", nil, actions.DatabaseAdd(*server, *domain, *dbs, db))
+		err = actions.DatabaseAdd(*server, *domain, *dbs, db)
+
+		if err == nil {
+			utils.Log.PrintL("database.create.success", db.Name)
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(3),
 }

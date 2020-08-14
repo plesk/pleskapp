@@ -2,6 +2,8 @@
 
 package json
 
+import "github.com/plesk/pleskapp/plesk/locales"
+
 type jsonError struct {
 	Code    int              `json:"code"`
 	Message string           `json:"message"`
@@ -78,4 +80,16 @@ type databaseInfo struct {
 	ParentDomainID int    `json:"parent_domain"`
 	ServerID       int    `json:"server_id"`
 	DefaultUserID  int    `json:"default_user_id"`
+}
+
+type authError struct {
+	server     string
+	needReauth bool
+}
+
+func (e authError) Error() string {
+	if e.needReauth {
+		return locales.L.Get("api.errors.auth.failed.reauth", e.server)
+	}
+	return locales.L.Get("api.errors.auth.wrong.pass", e.server)
 }

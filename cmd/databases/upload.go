@@ -47,12 +47,17 @@ var uploadCmd = &cobra.Command{
 		cmd.SilenceUsage = true
 		path, err := actions.UploadFileToRoot(*server, *domain, true, args[3])
 		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.execution.failed.generic", err.Error()))
 			return err
 		}
 
 		fp := strings.Split(args[3], "/")
-		return utils.Log.PrintSuccessOrError("database.deploy.success", nil, actions.DatabaseDeploy(*server, *domain, *db, path+"/"+fp[len(fp)-1]))
+		err = actions.DatabaseDeploy(*server, *domain, *db, path+"/"+fp[len(fp)-1])
+
+		if err == nil {
+			utils.Log.PrintL("database.deploy.success", db.Name, args[3])
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(4),
 }

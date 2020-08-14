@@ -3,14 +3,12 @@
 package json
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/api"
 	"github.com/plesk/pleskapp/plesk/features"
 	"github.com/plesk/pleskapp/plesk/locales"
@@ -19,8 +17,7 @@ import (
 )
 
 type jsonDomains struct {
-	auth   api.Auth
-	client *http.Client
+	client *resty.Client
 }
 
 type createDomainRequest struct {
@@ -41,10 +38,9 @@ type actionDomainResponse struct {
 	GUID string `json:"guid"`
 }
 
-func NewDomains(a api.Auth) jsonDomains {
+func NewDomains(c *resty.Client) jsonDomains {
 	return jsonDomains{
-		auth:   a,
-		client: getClient(a.GetIgnoreSsl()),
+		client: c,
 	}
 }
 
@@ -57,36 +53,28 @@ func (j jsonDomains) getDomainSysUser(d string) (string, error) {
 		},
 		Env: map[string]string{},
 	}
-
-	jd, err := json.Marshal(p)
-	if err != nil {
-		return "", nil
-	}
-
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/cli/domain/call"), bytes.NewBuffer(jd))
-	if err != nil {
-		return "", nil
-	}
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
+	req, err := json.Marshal(p)
 	if err != nil {
 		return "", err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&cliGateResponce{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/cli/domain/call")
+
 	if err != nil {
 		return "", err
 	}
 
-	var jRes cliGateResponce
-	e, err := tryParseResponceOrParseError(data, &jRes)
-	if err != nil {
-		return "", err
-	}
+	if res.IsSuccess() {
+		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		if r.Code != 0 {
+			return "", jsonCliGateResponceToError(*r)
+		}
 
-	if jRes.Code == 0 && e == nil {
-		for _, l := range strings.Split(jRes.Stdout, "\n") {
+		for _, l := range strings.Split(r.Stdout, "\n") {
 			if strings.HasPrefix(l, "FTP Login") {
 				p := strings.Split(l, " ")
 				return p[len(p)-1], nil
@@ -96,11 +84,12 @@ func (j jsonDomains) getDomainSysUser(d string) (string, error) {
 		return "", errors.New(locales.L.Get("api.errors.domain.info.not.found"))
 	}
 
-	if jRes.Code != 0 && e == nil {
-		return "", errors.New(locales.L.Get("api.errors.cligate.error.responce", jRes.Code, jRes.Stdout, jRes.Stderr))
+	if res.StatusCode() == 403 {
+		return "", authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return "", errors.New(locales.L.Get("api.errors.domain.info.failed", e.Code, e.Message))
+	var r *jsonError = res.Error().(*jsonError)
+	return "", errors.New(locales.L.Get("api.errors.domain.info.failed", r.Code, r.Message))
 }
 
 func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.DomainInfo, error) {
@@ -128,86 +117,74 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 		IPAddresses: ip,
 	}
 
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/domains"), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&actionDomainResponse{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/domains")
+
 	if err != nil {
 		return nil, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return nil, err
+	if res.IsSuccess() {
+		var _ *actionDomainResponse = res.Result().(*actionDomainResponse)
+		info, err := j.GetDomain(d)
+		return &info, err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+	if res.StatusCode() == 403 {
+		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var status actionDomainResponse
-	e, err := tryParseResponceOrParseError(data, &status)
-	if err != nil {
-		return nil, err
-	}
-
-	if e != nil || status.GUID == "" {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return nil, jsonErrorToError(*e)
-		}
-	}
-
-	info, err := j.GetDomain(d)
-	return &info, err
+	var r *jsonError = res.Error().(*jsonError)
+	return nil, jsonErrorToError(*r)
 }
 
-func (j jsonDomains) AddDomainFeatures(domain string, featureList []string) error {
+func (j jsonDomains) AddDomainFeatures(domain string, featureList []string, isWin bool) error {
 	var featureProvider = features.FeatureProvider{
-		IsWindows: j.auth.GetIsWindows(),
+		IsWindows: isWin,
 	}
 
 	for _, featureStr := range featureList {
 		feature := features.GetFeatureByString(featureStr)
 
 		if feature != nil {
-			packet, err := featureProvider.GetFeaturePackage(domain, *feature)
+			p, err := featureProvider.GetFeaturePackage(domain, *feature)
 			if err != nil {
 				return err
 			}
 
-			var req, _ = http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/cli/domain/call"), bytes.NewBuffer(packet))
-			addBasicHeaders(req, j.auth.GetApiKey())
+			res, err := j.client.R().
+				SetBody(p).
+				SetResult(&cliGateResponce{}).
+				SetError(&jsonError{}).
+				Post("/api/v2/cli/domain/call")
 
-			res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
 			if err != nil {
 				return err
 			}
 
-			data, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				return err
-			}
-
-			var r cliGateResponce
-			e, err := tryParseResponceOrParseError(data, &r)
-			if err != nil {
-				return err
-			}
-
-			if e != nil {
-				if e.Code != 0 || len(e.Errors) != 0 {
-					return jsonErrorToError(*e)
+			if res.IsSuccess() {
+				var r *cliGateResponce = res.Result().(*cliGateResponce)
+				if r.Code == 0 {
+					return nil
 				}
+
+				return jsonCliGateResponceToError(*r)
 			}
 
-			if r.Code != 0 {
-				return jsonCliGateResponceToError(r)
+			if res.StatusCode() == 403 {
+				return authError{server: j.client.HostURL, needReauth: true}
 			}
+
+			var r *jsonError = res.Error().(*jsonError)
+			return jsonErrorToError(*r)
 		}
 	}
 
@@ -215,47 +192,44 @@ func (j jsonDomains) AddDomainFeatures(domain string, featureList []string) erro
 }
 
 func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
-	req, err := http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/domains/?name="+d), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetResult([]domainInfo{}).
+		SetError(&jsonError{}).
+		SetQueryParam("name", d).
+		Get("/api/v2/domains")
+
 	if err != nil {
 		return api.DomainInfo{}, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
+	if res.IsSuccess() {
+		var r *[]domainInfo = res.Result().(*[]domainInfo)
+		if len(*r) == 0 {
+			return api.DomainInfo{}, errors.New(locales.L.Get("errors.domain.unknown", d))
+		}
 
-	var ds []domainInfo
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return api.DomainInfo{}, err
+		s, err := j.getDomainSysUser(d)
+		if err != nil {
+			return api.DomainInfo{}, err
+		}
+
+		return api.DomainInfo{
+			ID:             (*r)[0].ID,
+			Name:           (*r)[0].Name,
+			HostingType:    (*r)[0].HostingType,
+			ParentDomainID: (*r)[0].BaseDomainID,
+			GUID:           (*r)[0].GUID,
+			WWWRoot:        (*r)[0].WWWRoot,
+			Sysuser:        s,
+		}, nil
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return api.DomainInfo{}, err
+	if res.StatusCode() == 403 {
+		return api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	err = json.Unmarshal(data, &ds)
-	if err != nil {
-		return api.DomainInfo{}, err
-	}
-
-	if len(ds) == 0 {
-		return api.DomainInfo{}, errors.New(locales.L.Get("errors.domain.unknown", d))
-	}
-
-	s, err := j.getDomainSysUser(d)
-	if err != nil {
-		return api.DomainInfo{}, err
-	}
-
-	return api.DomainInfo{
-		ID:             ds[0].ID,
-		Name:           ds[0].Name,
-		HostingType:    ds[0].HostingType,
-		ParentDomainID: ds[0].BaseDomainID,
-		GUID:           ds[0].GUID,
-		WWWRoot:        ds[0].WWWRoot,
-		Sysuser:        s,
-	}, nil
+	var r *jsonError = res.Error().(*jsonError)
+	return api.DomainInfo{}, jsonErrorToError(*r)
 }
 
 func (j jsonDomains) RemoveDomain(d string) error {
@@ -264,57 +238,45 @@ func (j jsonDomains) RemoveDomain(d string) error {
 		return err
 	}
 
-	req, err := http.NewRequest("DELETE", api.GetApiUrl(j.auth, "/api/v2/domains/"+strconv.Itoa(info.ID)), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetError(&jsonError{}).
+		Delete("/api/v2/domains/" + strconv.Itoa(info.ID))
+
 	if err != nil {
 		return err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var data, _ = ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	var status actionDomainResponse
-	e, err := tryParseResponceOrParseError(data, &status)
-	if err != nil {
-		return err
-	}
-
-	if e != nil || status.GUID == "" {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
-		}
+	if res.IsError() {
+		var r *jsonError = res.Error().(*jsonError)
+		return jsonErrorToError(*r)
 	}
 
 	return nil
 }
 
 func (j jsonDomains) ListDomains() ([]api.DomainInfo, error) {
-	var req, _ = http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/domains"), bytes.NewBuffer([]byte{}))
-	addBasicHeaders(req, j.auth.GetApiKey())
+	res, err := j.client.R().
+		SetResult([]domainInfo{}).
+		SetError(&jsonError{}).
+		Get("/api/v2/domains/")
 
-	var d []domainInfo
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
 	if err != nil {
-		return jsonDomainInfoToInfo(d), err
+		return []api.DomainInfo{}, err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonDomainInfoToInfo(d), err
+	if res.IsSuccess() {
+		var r *[]domainInfo = res.Result().(*[]domainInfo)
+		return jsonDomainInfoToInfo(*r), nil
 	}
 
-	err = json.Unmarshal(data, &d)
-	if err != nil {
-		return jsonDomainInfoToInfo(d), err
+	if res.StatusCode() == 403 {
+		return []api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return jsonDomainInfoToInfo(d), nil
+	var r *jsonError = res.Error().(*jsonError)
+	return []api.DomainInfo{}, jsonErrorToError(*r)
 }

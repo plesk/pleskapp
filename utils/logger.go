@@ -25,21 +25,12 @@ func (l *logger) HasDebug() bool {
 	return l.level >= 2
 }
 
-func (l *logger) Print(s string) {
-	l.stdout.Print(s)
+func (l *logger) PrintL(s string, vars ...interface{}) {
+	l.stdout.Print(locales.L.Get(s, vars...))
 }
 
-func (l *logger) PrintSuccessOrError(sloc string, errloc *string, err error) error {
-	if err != nil {
-		if errloc != nil {
-			l.Error(locales.L.Get(*errloc, err.Error()))
-		} else {
-			l.Error(err.Error())
-		}
-	} else {
-		l.Print(locales.L.Get(sloc))
-	}
-	return err
+func (l *logger) Print(s string) {
+	l.stdout.Print(s)
 }
 
 func (l *logger) Verbose(s string) {

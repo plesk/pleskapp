@@ -20,7 +20,13 @@ var reauthCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("server.reauth.success", nil, actions.ServerReauth(*server))
+		err = actions.ServerReauth(*server)
+
+		if err == nil {
+			utils.Log.PrintL("server.reauth.success")
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(1),
 }

@@ -3,18 +3,15 @@
 package json
 
 import (
-	"bytes"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/api"
 	"github.com/plesk/pleskapp/plesk/types"
 )
 
 type jsonFTPUsers struct {
-	auth   api.Auth
-	client *http.Client
+	client *resty.Client
 }
 
 type createFtpUserRequest struct {
@@ -38,34 +35,34 @@ type updateFtpUserRequest struct {
 	Quota    int    `json:"quota"`
 }
 
-func NewFTP(a api.Auth) jsonFTPUsers {
+func NewFTP(c *resty.Client) jsonFTPUsers {
 	return jsonFTPUsers{
-		auth:   a,
-		client: getClient(a.GetIgnoreSsl()),
+		client: c,
 	}
 }
 
 func (j jsonFTPUsers) ListDomainFtpUsers(domain string, user types.FtpUser) ([]api.FTPUserInfo, error) {
-	var req, _ = http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/ftpusers?domain="+domain), bytes.NewBuffer([]byte{}))
-	addBasicHeaders(req, j.auth.GetApiKey())
+	res, err := j.client.R().
+		SetResult([]ftpUserInfo{}).
+		SetError(&jsonError{}).
+		SetQueryParam("domain", domain).
+		Post("/api/v2/ftpusers")
 
-	var u []ftpUserInfo
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
 	if err != nil {
-		return jsonFTPUserInfoToInfo(u), err
+		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonFTPUserInfoToInfo(u), err
+	if res.IsSuccess() {
+		var r *[]ftpUserInfo = res.Result().(*[]ftpUserInfo)
+		return jsonFTPUserInfoToInfo(*r), nil
 	}
 
-	err = json.Unmarshal(data, &u)
-	if err != nil {
-		return jsonFTPUserInfoToInfo(u), err
+	if res.StatusCode() == 403 {
+		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return jsonFTPUserInfoToInfo(u), nil
+	var r *jsonError = res.Error().(*jsonError)
+	return nil, jsonErrorToError(*r)
 }
 
 func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTPUserInfo, error) {
@@ -82,46 +79,37 @@ func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTP
 			Name: domain,
 		},
 	}
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/ftpusers/"), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&ftpUserInfo{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/ftpusers")
+
 	if err != nil {
 		return nil, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return nil, err
+	if res.IsSuccess() {
+		var r *ftpUserInfo = res.Result().(*ftpUserInfo)
+		return &api.FTPUserInfo{
+			Name:           r.Home,
+			Home:           r.Name,
+			Quota:          r.Quota,
+			ParentDomainID: r.ParentDomain,
+		}, nil
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+	if res.StatusCode() == 403 {
+		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var s ftpUserInfo
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return nil, err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return nil, jsonErrorToError(*e)
-		}
-	}
-
-	return &api.FTPUserInfo{
-		Name:           s.Home,
-		Home:           s.Name,
-		Quota:          s.Quota,
-		ParentDomainID: s.ParentDomain,
-	}, nil
+	var r *jsonError = res.Error().(*jsonError)
+	return nil, jsonErrorToError(*r)
 }
 
 func (j jsonFTPUsers) UpdateFtpUser(domain string, user string, userNew types.FtpUser) error {
@@ -131,71 +119,50 @@ func (j jsonFTPUsers) UpdateFtpUser(domain string, user string, userNew types.Ft
 		Home:     "/",
 		Quota:    -1,
 	}
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("UPDATE", api.GetApiUrl(j.auth, "/api/v2/ftpusers/"+user), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&statusResponse{}).
+		SetError(&jsonError{}).
+		Put("/api/v2/ftpusers/" + user)
+
 	if err != nil {
 		return err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
+	if res.IsSuccess() {
+		var _ *statusResponse = res.Result().(*statusResponse)
+		return nil
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var s statusResponse
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
-		}
-	}
-
-	return nil
+	var r *jsonError = res.Error().(*jsonError)
+	return jsonErrorToError(*r)
 }
 
 func (j jsonFTPUsers) DeleteFtpUser(domain string, user types.FtpUser) error {
-	req, err := http.NewRequest("DELETE", api.GetApiUrl(j.auth, "/api/v2/ftpusers/"+user.Login), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetError(&jsonError{}).
+		Delete("/api/v2/ftpusers/" + user.Login)
+
 	if err != nil {
 		return err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	var s statusResponse
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
-		}
+	if res.IsError() {
+		var r *jsonError = res.Error().(*jsonError)
+		return jsonErrorToError(*r)
 	}
 
 	return nil

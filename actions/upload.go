@@ -4,11 +4,11 @@ package actions
 
 import (
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
 	"github.com/plesk/pleskapp/plesk/api/factory"
-	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/plesk/pleskapp/plesk/types"
 	"github.com/plesk/pleskapp/plesk/upload"
 	"github.com/plesk/pleskapp/plesk/utils"
@@ -88,14 +88,14 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 		serverPath = docroot
 	}
 
-	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		pathPart := strings.TrimPrefix(path, dir)
+	return filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		pathPart := strings.TrimPrefix(p, dir)
 		if pathPart == "." {
 			return nil
 		}
 
 		if dry {
-			utils.Log.Print(locales.L.Get("upload.dry.run.upload", dir+"/"+pathPart, *serverPath+"/"+pathPart))
+			utils.Log.PrintL("upload.dry.run.upload", path.Join(dir, pathPart), path.Join(*serverPath, pathPart))
 			return nil
 		}
 

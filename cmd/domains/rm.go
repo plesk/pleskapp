@@ -14,6 +14,7 @@ var deleteCmd = &cobra.Command{
 	Use:   locales.L.Get("domain.delete.cmd"),
 	Short: locales.L.Get("domain.delete.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var lastErr error = nil
 		server, err := config.GetServer(args[0])
 		if err != nil {
 			return err
@@ -29,13 +30,18 @@ var deleteCmd = &cobra.Command{
 
 				err = actions.DomainDelete(*server, *domain)
 				if err != nil {
+					lastErr = err
 					utils.Log.Error(err.Error())
 				}
 			}
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("domain.delete.success", nil, err)
+		if lastErr == nil {
+			utils.Log.PrintL("domain.delete.success")
+		}
+
+		return lastErr
 	},
 	Args: cobra.MaximumNArgs(2),
 }

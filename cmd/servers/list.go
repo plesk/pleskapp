@@ -11,8 +11,9 @@ import (
 var listCmd = &cobra.Command{
 	Use:   locales.L.Get("server.list.cmd"),
 	Short: locales.L.Get("server.list.description"),
-	Run: func(cmd *cobra.Command, args []string) {
-		actions.ServerList()
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cmd.SilenceUsage = true
+		return actions.ServerList()
 	},
 	Args: cobra.ExactArgs(0),
 }

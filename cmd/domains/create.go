@@ -41,7 +41,13 @@ var createCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("domain.create.success", nil, actions.DomainAdd(*server, args[1], ips))
+		err = actions.DomainAdd(*server, args[1], ips)
+
+		if err == nil {
+			utils.Log.PrintL("domain.create.success", args[1])
+		}
+
+		return err
 	},
 	Args: cobra.RangeArgs(3, 4),
 }

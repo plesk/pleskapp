@@ -3,19 +3,18 @@
 package json
 
 import (
-	"bytes"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
+	"errors"
 	"strconv"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/api"
+	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/plesk/pleskapp/plesk/types"
 )
 
 type jsonDatabases struct {
-	auth   api.Auth
-	client *http.Client
+	client *resty.Client
 }
 
 type createDatabaseRequest struct {
@@ -31,57 +30,57 @@ type createDatabaseUserRequest struct {
 	DatabaseID int    `json:"database_id"`
 }
 
-func NewDatabases(a api.Auth) jsonDatabases {
+func NewDatabases(c *resty.Client) jsonDatabases {
 	return jsonDatabases{
-		auth:   a,
-		client: getClient(a.GetIgnoreSsl()),
+		client: c,
 	}
 }
 
 func (j jsonDatabases) ListDatabases() ([]api.DatabaseInfo, error) {
-	var req, _ = http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/databases"), bytes.NewBuffer([]byte{}))
-	addBasicHeaders(req, j.auth.GetApiKey())
+	res, err := j.client.R().
+		SetResult([]databaseInfo{}).
+		SetError(&jsonError{}).
+		Get("/api/v2/databases")
 
-	var d []databaseInfo
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
 	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+	if res.IsSuccess() {
+		var r *[]databaseInfo = res.Result().(*[]databaseInfo)
+		return jsonDatabaseInfoToInfo(*r), err
 	}
 
-	err = json.Unmarshal(data, &d)
-	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+	if res.StatusCode() == 403 {
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return jsonDatabaseInfoToInfo(d), err
+	var r *jsonError = res.Error().(*jsonError)
+	return jsonDatabaseInfoToInfo([]databaseInfo{}), errors.New(locales.L.Get("api.errors.failed.request", r.Code, r.Message, r.Errors))
 }
 
 func (j jsonDatabases) ListDomainDatabases(domain string) ([]api.DatabaseInfo, error) {
-	var req, _ = http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/databases?domain="+domain), bytes.NewBuffer([]byte{}))
-	addBasicHeaders(req, j.auth.GetApiKey())
+	res, err := j.client.R().
+		SetResult([]databaseInfo{}).
+		SetError(&jsonError{}).
+		SetQueryParam("domain", domain).
+		Get("/api/v2/databases")
 
-	var d []databaseInfo
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
 	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+	if res.IsSuccess() {
+		var r *[]databaseInfo = res.Result().(*[]databaseInfo)
+		return jsonDatabaseInfoToInfo(*r), err
 	}
 
-	err = json.Unmarshal(data, &d)
-	if err != nil {
-		return jsonDatabaseInfoToInfo(d), err
+	if res.StatusCode() == 403 {
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return jsonDatabaseInfoToInfo(d), err
+	var r *jsonError = res.Error().(*jsonError)
+	return jsonDatabaseInfoToInfo([]databaseInfo{}), jsonErrorToError(*r)
 }
 
 func (j jsonDatabases) CreateDatabase(domain types.Domain, db types.NewDatabase, dbs types.DatabaseServer) (*api.DatabaseInfo, error) {
@@ -93,77 +92,56 @@ func (j jsonDatabases) CreateDatabase(domain types.Domain, db types.NewDatabase,
 		},
 		ServerID: dbs.ID,
 	}
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/databases/"), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&databaseInfo{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/databases")
+
 	if err != nil {
 		return nil, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return nil, err
+	if res.IsSuccess() {
+		var r *databaseInfo = res.Result().(*databaseInfo)
+		return &api.DatabaseInfo{
+			ID:               r.ID,
+			Name:             r.Name,
+			Type:             r.Type,
+			ParentDomainID:   r.ParentDomainID,
+			DatabaseServerID: r.ServerID,
+		}, nil
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+	if res.StatusCode() == 403 {
+		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var s databaseInfo
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return nil, err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return nil, jsonErrorToError(*e)
-		}
-	}
-
-	return &api.DatabaseInfo{
-		ID:               s.ID,
-		Name:             s.Name,
-		Type:             s.Type,
-		ParentDomainID:   s.ParentDomainID,
-		DatabaseServerID: s.ServerID,
-	}, nil
+	var r *jsonError = res.Error().(*jsonError)
+	return nil, jsonErrorToError(*r)
 }
 
 func (j jsonDatabases) RemoveDatabase(db types.Database) error {
-	req, err := http.NewRequest("DELETE", api.GetApiUrl(j.auth, "/api/v2/databases/"+strconv.Itoa(db.ID)), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetError(&jsonError{}).
+		Post("/api/v2/databases/" + strconv.Itoa(db.ID))
+
 	if err != nil {
 		return err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	var s statusResponse
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
-		}
+	if res.IsError() {
+		var r *jsonError = res.Error().(*jsonError)
+		return jsonErrorToError(*r)
 	}
 
 	return nil
@@ -178,7 +156,6 @@ func (j jsonDatabases) DeployDatabase(
 	sysuser *string,
 ) error {
 	var p cliGateRequest
-
 	if !isWindows {
 		s := "root"
 		if sysuser != nil {
@@ -215,72 +192,58 @@ func (j jsonDatabases) DeployDatabase(
 			Env: map[string]string{},
 		}
 	}
-	jd, err := json.Marshal(&p)
+
+	req, err := json.Marshal(p)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/cli/dbbackup/call"), bytes.NewBuffer(jd))
-	if err != nil {
-		return err
-	}
-	addBasicHeaders(req, j.auth.GetApiKey())
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&cliGateResponce{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/cli/dbbackup/call")
 
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
-	}
-
-	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
 
-	var r cliGateResponce
-
-	e, err := tryParseResponceOrParseError(data, &r)
-	if err != nil {
-		return err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
+	if res.IsSuccess() {
+		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		if r.Code != 0 || len(r.Stderr) != 0 {
+			return jsonCliGateResponceToError(*r)
 		}
 	}
 
-	if r.Code != 0 || len(r.Stderr) != 0 {
-		return jsonCliGateResponceToError(r)
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	return nil
+	var r *jsonError = res.Error().(*jsonError)
+	return jsonErrorToError(*r)
 }
 
 func (j jsonDatabases) ListDatabaseServers() ([]api.DatabaseServerInfo, error) {
-	var d []databaseServerInfo
-	req, err := http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/dbservers"), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetResult([]databaseServerInfo{}).
+		SetError(&jsonError{}).
+		Get("/api/v2/dbservers")
+
 	if err != nil {
-		return jsonDatabaseServerInfoToInfo(d), err
+		return []api.DatabaseServerInfo{}, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return jsonDatabaseServerInfoToInfo(d), err
+	if res.IsSuccess() {
+		var r *[]databaseServerInfo = res.Result().(*[]databaseServerInfo)
+		return jsonDatabaseServerInfoToInfo(*r), err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonDatabaseServerInfoToInfo(d), err
+	if res.StatusCode() == 403 {
+		return []api.DatabaseServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	err = json.Unmarshal(data, &d)
-	if err != nil {
-		return jsonDatabaseServerInfoToInfo(d), err
-	}
-
-	return jsonDatabaseServerInfoToInfo(d), err
+	var r *jsonError = res.Error().(*jsonError)
+	return []api.DatabaseServerInfo{}, jsonErrorToError(*r)
 }
 
 func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDatabaseUser) (*api.DatabaseUserInfo, error) {
@@ -289,104 +252,79 @@ func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDat
 		Password:   dbuser.Password,
 		DatabaseID: db.ID,
 	}
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(j.auth, "/api/v2/dbusers/"), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&databaseUserInfo{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/dbusers/")
+
 	if err != nil {
 		return nil, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return nil, err
+	if res.IsSuccess() {
+		var r *databaseUserInfo = res.Result().(*databaseUserInfo)
+		return &api.DatabaseUserInfo{
+			ID:         r.ID,
+			Login:      r.Login,
+			DatabaseID: r.DatabaseID,
+		}, nil
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
+	if res.StatusCode() == 403 {
+		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var s databaseUserInfo
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return nil, err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return nil, jsonErrorToError(*e)
-		}
-	}
-
-	return &api.DatabaseUserInfo{
-		ID:         s.ID,
-		Login:      s.Login,
-		DatabaseID: s.DatabaseID,
-	}, nil
+	var r *jsonError = res.Error().(*jsonError)
+	return nil, jsonErrorToError(*r)
 }
 
 func (j jsonDatabases) RemoveDatabaseUser(dbu types.DatabaseUser) error {
-	req, err := http.NewRequest("DELETE", api.GetApiUrl(j.auth, "/api/v2/dbusers/"+strconv.Itoa(dbu.ID)), bytes.NewBuffer([]byte{}))
+	res, err := j.client.R().
+		SetError(&jsonError{}).
+		Delete("/api/v2/dbusers/" + strconv.Itoa(dbu.ID))
+
 	if err != nil {
 		return err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return err
+	if res.StatusCode() == 403 {
+		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	d, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	var s statusResponse
-	e, err := tryParseResponceOrParseError(d, &s)
-	if err != nil {
-		return err
-	}
-
-	if e != nil {
-		if e.Code != 0 || len(e.Errors) != 0 {
-			return jsonErrorToError(*e)
-		}
+	if res.IsError() {
+		var r *jsonError = res.Error().(*jsonError)
+		return jsonErrorToError(*r)
 	}
 
 	return nil
 }
 
 func (j jsonDatabases) ListDatabaseUsers(db types.Database) ([]api.DatabaseUserInfo, error) {
-	var d []databaseUserInfo
+	res, err := j.client.R().
+		SetResult([]databaseUserInfo{}).
+		SetError(&jsonError{}).
+		SetQueryParam("dbId", strconv.Itoa(db.ID)).
+		Get("/api/v2/dbusers")
 
-	req, err := http.NewRequest("GET", api.GetApiUrl(j.auth, "/api/v2/dbusers?dbId="+strconv.Itoa(db.ID)), bytes.NewBuffer([]byte{}))
 	if err != nil {
-		return jsonDatabaseUserInfoToInfo(d), err
+		return []api.DatabaseUserInfo{}, err
 	}
 
-	addBasicHeaders(req, j.auth.GetApiKey())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, j.auth.GetAddress())
-	if err != nil {
-		return jsonDatabaseUserInfoToInfo(d), err
+	if res.IsSuccess() {
+		var r *[]databaseUserInfo = res.Result().(*[]databaseUserInfo)
+		return jsonDatabaseUserInfoToInfo(*r), err
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return jsonDatabaseUserInfoToInfo(d), err
+	if res.StatusCode() == 403 {
+		return []api.DatabaseUserInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	err = json.Unmarshal(data, &d)
-	if err != nil {
-		return jsonDatabaseUserInfoToInfo(d), err
-	}
-
-	return jsonDatabaseUserInfoToInfo(d), err
+	var r *jsonError = res.Error().(*jsonError)
+	return []api.DatabaseUserInfo{}, jsonErrorToError(*r)
 }

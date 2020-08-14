@@ -64,7 +64,12 @@ var deployCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("app.deploy.success", nil, actions.AppDeploy(*server, c, path, *domain))
+		err = actions.AppDeploy(*server, c, path, *domain)
+		if err == nil {
+			utils.Log.PrintL("app.deploy.success", path)
+		}
+
+		return err
 	},
 	Args: cobra.MaximumNArgs(1),
 }

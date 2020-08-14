@@ -17,6 +17,7 @@ var SyncCmd = &cobra.Command{
 	Use:   locales.L.Get("files.upload.cmd"),
 	Short: locales.L.Get("files.upload.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var lastErr error = nil
 		overwrite, _ := cmd.Flags().GetBool("overwrite")
 		dry, _ := cmd.Flags().GetBool("dryRun")
 
@@ -38,12 +39,14 @@ var SyncCmd = &cobra.Command{
 
 			path, err := filepath.Abs(p)
 			if err != nil {
+				lastErr = err
 				utils.Log.Error(locales.L.Get("errors.abspath.failed", p, err.Error()))
 				continue
 			}
 
 			s, err := os.Stat(path)
 			if err != nil {
+				lastErr = err
 				utils.Log.Error(locales.L.Get("errors.stat.failed", path, err.Error()))
 				continue
 			}
@@ -51,12 +54,14 @@ var SyncCmd = &cobra.Command{
 			if s.IsDir() {
 				err = actions.UploadDirectory(*server, *domain, overwrite, dry, path, nil)
 				if err != nil {
+					lastErr = err
 					utils.Log.Error(locales.L.Get("errors.upload.failed", path, err.Error()))
 				}
 			} else {
 				if !dry {
 					err = actions.UploadFile(*server, *domain, overwrite, path)
 					if err != nil {
+						lastErr = err
 						utils.Log.Error(locales.L.Get("errors.upload.failed", path, err.Error()))
 					}
 				}
@@ -64,7 +69,11 @@ var SyncCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		return utils.Log.PrintSuccessOrError("files.upload.success", nil, err)
+		if lastErr == nil {
+			utils.Log.PrintL("files.upload.success")
+		}
+
+		return err
 	},
 	Args: cobra.MinimumNArgs(3),
 }

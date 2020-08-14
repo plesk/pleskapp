@@ -18,6 +18,7 @@ var listCmd = &cobra.Command{
 			return err
 		}
 
+		cmd.SilenceUsage = true
 		return actions.DomainList(*server)
 	},
 	Args: cobra.ExactArgs(1),

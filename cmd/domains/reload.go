@@ -19,7 +19,14 @@ var reloadCmd = &cobra.Command{
 			return err
 		}
 
-		return utils.Log.PrintSuccessOrError("domain.reload.success", nil, actions.DomainReload(*server))
+		cmd.SilenceUsage = true
+		err = actions.DomainReload(*server)
+
+		if err == nil {
+			utils.Log.PrintL("domain.reload.success")
+		}
+
+		return err
 	},
 	Args: cobra.ExactArgs(1),
 }

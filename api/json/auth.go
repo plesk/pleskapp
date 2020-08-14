@@ -3,13 +3,10 @@
 package json
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/api"
 	"github.com/plesk/pleskapp/plesk/locales"
 )
@@ -26,17 +23,17 @@ type createApiKeyResponse struct {
 
 //JsonAuth gets API keys via REST CLI Gate
 type JsonAuth struct {
-	client *http.Client
+	client *resty.Client
 }
 
-func NewAuth(a api.AuthClient) JsonAuth {
+func NewAuth(c *resty.Client) JsonAuth {
 	return JsonAuth{
-		client: getClient(a.GetIgnoreSsl()),
+		client: c,
 	}
 }
 
 //GetAPIKey gets API keys via REST CLI Gate
-func (j JsonAuth) GetAPIKey(preAuth api.PreAuth) (string, error) {
+func (j JsonAuth) GetAPIKey(a api.Auth) (string, error) {
 	// FIXME: Enable direct call when 18.0.25-18.0.28 are no longer used:
 	//  https://jira.plesk.ru/browse/PPP-49425
 
@@ -46,41 +43,32 @@ func (j JsonAuth) GetAPIKey(preAuth api.PreAuth) (string, error) {
 			Login:       "admin",
 			Description: "PleskApp API key",
 		}
-		jd, err := json.Marshal(p)
+		req, err := json.Marshal(p)
 		if err != nil {
 			return "", err
 		}
 
-		req, err := http.NewRequest("POST", api.GetApiUrl(preAuth, "/api/v2/auth/keys"), bytes.NewBuffer(jd))
+		res, err := j.client.R().
+			SetBody(req).
+			SetResult(&createApiKeyResponse{}).
+			SetError(&jsonError{}).
+			Post("/api/v2/auth/keys")
+
 		if err != nil {
 			return "", err
 		}
 
-		req.Header["Content-Type"] = []string{"application/json"}
-		req.Header["Accept"] = []string{"application/json"}
-		req.SetBasicAuth(preAuth.GetLogin(), preAuth.GetPassword())
-
-		res, err := j.client.Do(req)
-		if err != nil {
-			return "", err
+		if res.IsSuccess() {
+			var r *createApiKeyResponse = res.Result().(*createApiKeyResponse)
+			return r.Key, nil
 		}
 
-		data, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return "", err
+		if res.StatusCode() == 403 {
+			return "", authError{server: j.client.HostURL, needReauth: false}
 		}
 
-		var jRes createApiKeyResponse
-		e, err := tryParseResponceOrParseError(data, jRes)
-		if err != nil {
-			return "", err
-		}
-
-		if res.StatusCode == 201 && e == nil {
-			return jRes.Key, nil
-		}
-
-		return "", fmt.Errorf("Failed to acquire an API key using provided password: [%d: %s]", e.Code, e.Message)
+		var r *jsonError = res.Error().(*jsonError)
+		return "", errors.New(locales.L.Get("api.errors.auth.cli.failed", r.Code, r.Message))
 	}
 
 	p := cliGateRequest{
@@ -91,34 +79,36 @@ func (j JsonAuth) GetAPIKey(preAuth api.PreAuth) (string, error) {
 		},
 		Env: map[string]string{},
 	}
-
-	jd, _ := json.Marshal(p)
-
-	req, _ := http.NewRequest("POST", api.GetApiUrl(preAuth, "/api/v2/cli/secret_key/call"), bytes.NewBuffer(jd))
-	req.Header["Content-Type"] = []string{"application/json"}
-	req.Header["Accept"] = []string{"application/json"}
-	req.SetBasicAuth(preAuth.GetLogin(), preAuth.GetPassword())
-
-	res, err := doAndThenCheckAuthFailure(j.client, req, preAuth.GetAddress(), true)
-	if err != nil {
-		return "", err
-	}
-	var data, _ = ioutil.ReadAll(res.Body)
-	var jRes cliGateResponce
-	e, err := tryParseResponceOrParseError(data, &jRes)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return "", err
 	}
 
-	if jRes.Code == 0 && e == nil {
-		return jRes.Stdout, nil
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&cliGateResponce{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/cli/secret_key/call")
+
+	if err != nil {
+		return "", err
 	}
 
-	if jRes.Code != 0 && e == nil {
-		return "", errors.New(locales.L.Get("api.errors.auth.failed", jRes.Stderr))
+	if res.IsSuccess() {
+		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		if r.Code == 0 {
+			return r.Stdout, nil
+		}
+
+		return "", errors.New(locales.L.Get("api.errors.auth.failed", r.Stderr))
 	}
 
-	return "", errors.New(locales.L.Get("api.errors.auth.cli.failed", e.Code, e.Message))
+	if res.StatusCode() == 403 {
+		return "", authError{server: j.client.HostURL, needReauth: false}
+	}
+
+	var r *jsonError = res.Error().(*jsonError)
+	return "", jsonErrorToError(*r)
 }
 
 func (j JsonAuth) GetLoginLink(auth api.Auth) (string, error) {
@@ -128,38 +118,36 @@ func (j JsonAuth) GetLoginLink(auth api.Auth) (string, error) {
 		},
 		Env: map[string]string{},
 	}
-
-	jd, err := json.Marshal(p)
+	req, err := json.Marshal(p)
 	if err != nil {
 		return "", err
 	}
 
-	req, err := http.NewRequest("POST", api.GetApiUrl(auth, "/api/v2/cli/admin/call"), bytes.NewBuffer(jd))
+	res, err := j.client.R().
+		SetBody(req).
+		SetResult(&cliGateResponce{}).
+		SetError(&jsonError{}).
+		Post("/api/v2/cli/admin/call")
+
 	if err != nil {
 		return "", err
 	}
 
-	addBasicHeaders(req, auth.GetApiKey())
-	res, err := doAndThenCheckAuthFailure(j.client, req, auth.GetAddress())
-	if err != nil {
-		return "", err
+	if res.IsSuccess() {
+		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		if r.Code == 0 {
+			return r.Stdout, nil
+		}
+
+		return "", errors.New(locales.L.Get("api.errors.auth.failed", r.Stderr))
 	}
 
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return "", err
-	}
-	var jRes cliGateResponce
-	e, err := tryParseResponceOrParseError(data, &jRes)
-	if err != nil {
-		return "", err
+	if res.StatusCode() == 403 {
+		return "", authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	if e == nil {
-		return jRes.Stdout, nil
-	}
-
-	return "", fmt.Errorf("Failed to acquire an API key using provided password: [%d: %s]", e.Code, e.Message)
+	var r *jsonError = res.Error().(*jsonError)
+	return "", jsonErrorToError(*r)
 }
 
 type removeAPIKey struct {
@@ -168,14 +156,19 @@ type removeAPIKey struct {
 
 //RemoveAPIKey removes API key via REST CLI Gate
 func (j JsonAuth) RemoveAPIKey(auth api.Auth) (string, error) {
-	var req, _ = http.NewRequest("DELETE", api.GetApiUrl(auth, "/api/v2/auth/keys/"+auth.GetApiKey()), bytes.NewBuffer([]byte{}))
-	addBasicHeaders(req, auth.GetApiKey())
+	key := auth.GetApiKey()
+	res, err := j.client.R().
+		SetError(&jsonError{}).
+		Delete("/api/v2/auth/keys/" + *key)
 
-	res, err := j.client.Do(req)
 	if err != nil {
 		return "", err
 	}
 
-	var data, _ = ioutil.ReadAll(res.Body)
-	return string(data), err
+	if res.IsError() {
+		var r *jsonError = res.Error().(*jsonError)
+		return "", jsonErrorToError(*r)
+	}
+
+	return string(res.Body()), nil
 }
