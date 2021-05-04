@@ -7,4 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var ServersCmd = &cobra.Command{Use: "servers", Short: locales.L.Get("server.description")}
+var ServersCmd = &cobra.Command{
+	Use:   "servers",
+	Short: locales.L.Get("server.description"),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return listCmd.RunE(cmd, args)
+	},
+}
