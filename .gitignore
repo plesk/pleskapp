@@ -2,3 +2,4 @@
 /plesk
 /.plesk
 /plesk.exe
+/build/*/plesk
