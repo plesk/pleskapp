@@ -8,4 +8,5 @@ require (
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/jlaffaye/ftp v0.0.0-20200730135723-c2ee4fa2503b
 	github.com/spf13/cobra v1.0.0
+	golang.org/x/crypto v0.0.0-20210503195802-e9a32991a82e
 )

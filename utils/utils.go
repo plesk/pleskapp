@@ -3,14 +3,14 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	randn "math/rand"
-	"os"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/plesk/pleskapp/plesk/types"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 func FilterDomains(elements []types.Domain, filterOut string) ([]types.Domain, []types.Domain) {
@@ -97,12 +97,13 @@ func GenUsername(length int) string {
 
 func RequestPassword(reason string) (string, error) {
 	fmt.Println(reason)
-	str, err := (bufio.NewReader(os.Stdin)).ReadString('\n')
+
+	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return "", err
 	}
 
-	return strings.TrimSpace(str), err
+	return strings.TrimSpace(string(bytePassword)), err
 }
 
 func strRev(s []rune) []rune {
