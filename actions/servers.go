@@ -4,6 +4,7 @@ package actions
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/plesk/pleskapp/plesk/api"
@@ -101,8 +102,8 @@ func ServerList() error {
 			"Address: %s\nVersion: %s\nIPv4: %s\nIPv6: %s\n\n",
 			i.Host,
 			i.Info.Version,
-			i.Info.IP.IPv4,
-			i.Info.IP.IPv6,
+			strings.Join(i.Info.IP.IPv4, ","),
+			strings.Join(i.Info.IP.IPv6, ","),
 		)
 	}
 
