@@ -54,7 +54,7 @@ func ServerAdd(host string, ignoreSsl bool) error {
 		return fmt.Errorf("Server with address " + host + " is already registered")
 	}
 	login := ADMIN_USER
-	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host)
+	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host + ":")
 	if err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func ServerUpdate(host types.Server) error {
 
 func ServerReauth(host types.Server) error {
 	login := "admin"
-	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host.Host)
+	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host.Host + ":")
 	if err != nil {
 		return err
 	}
