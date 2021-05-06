@@ -7,10 +7,21 @@ import (
 	"os"
 
 	"github.com/plesk/pleskapp/plesk/cmd"
+	versionCmd "github.com/plesk/pleskapp/plesk/cmd/version"
 	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/plesk/pleskapp/plesk/utils"
 )
+
+var (
+	revision  string
+	buildTime string
+)
+
+func init() {
+	versionCmd.Revision = revision
+	versionCmd.BuildTime = buildTime
+}
 
 func main() {
 	home, err := os.UserHomeDir()

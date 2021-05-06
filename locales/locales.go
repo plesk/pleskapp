@@ -146,6 +146,8 @@ func init() {
 			"api.errors.domain.info.not.found":  "Failed to get domain info (no FTP Login field)",
 
 			"upload.dry.run.upload": "Dry run; would upload file %s to %s",
+
+			"version.description": "Display client version",
 		},
 	}
 

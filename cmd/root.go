@@ -8,6 +8,7 @@ import (
 	domainsCmd "github.com/plesk/pleskapp/plesk/cmd/domains"
 	serversCmd "github.com/plesk/pleskapp/plesk/cmd/servers"
 	syncCmd "github.com/plesk/pleskapp/plesk/cmd/sync"
+	versionCmd "github.com/plesk/pleskapp/plesk/cmd/version"
 	"github.com/plesk/pleskapp/plesk/utils"
 
 	"github.com/spf13/cobra"
@@ -26,6 +27,7 @@ func Execute() error {
 		domainsCmd.DomainsCmd,
 		serversCmd.ServersCmd,
 		syncCmd.SyncCmd,
+		versionCmd.VersionCmd,
 	)
 
 	return rootCmd.Execute()
