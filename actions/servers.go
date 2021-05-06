@@ -98,10 +98,9 @@ func ServerLogin(host types.Server) error {
 func ServerList() error {
 	for _, i := range config.GetServers() {
 		fmt.Printf(
-			"Address: %s\nVersion: %s\nAPI key: %s\nIPv4: %s\nIPv6: %s\n\n",
+			"Address: %s\nVersion: %s\nIPv4: %s\nIPv6: %s\n\n",
 			i.Host,
 			i.Info.Version,
-			i.APIKey,
 			i.Info.IP.IPv4,
 			i.Info.IP.IPv6,
 		)
