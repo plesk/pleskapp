@@ -1,3 +1,5 @@
+# Copyright 1999-2021. Plesk International GmbH.
+
 OUTFILE=plesk
 REVISON:=$(shell git rev-parse --short HEAD)
 BUILD_TIME=$(shell date +'%Y-%m-%d_%T')
