@@ -5,6 +5,8 @@ package actions
 import (
 	"fmt"
 	"github.com/pkg/browser"
+	"os"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -103,6 +105,16 @@ func ServerLogin(host types.Server, generateOnly bool) error {
 	}
 
 	return nil
+}
+
+func ServerSsh(host types.Server) error {
+	fmt.Printf("Login to %s using SSH...\n", host.Host)
+
+	cmd := exec.Command("ssh", host.Host)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func ServerList() error {
