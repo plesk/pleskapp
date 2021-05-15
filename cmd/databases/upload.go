@@ -16,7 +16,7 @@ import (
 )
 
 var uploadCmd = &cobra.Command{
-	Use:   locales.L.Get("database.deploy.cmd"),
+	Use:   "upload [SERVER] [DOMAIN] [NAME] [FILE]",
 	Short: locales.L.Get("database.deploy.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		server, err := config.GetServer(args[0])

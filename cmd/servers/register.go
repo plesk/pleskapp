@@ -10,7 +10,7 @@ import (
 )
 
 var registerCmd = &cobra.Command{
-	Use:   locales.L.Get("server.register.cmd"),
+	Use:   "register [IP ADDRESS|HOSTNAME]",
 	Short: locales.L.Get("server.register.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ignoreSsl, _ := cmd.Flags().GetBool("ignore-ssl")

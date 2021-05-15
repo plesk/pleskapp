@@ -14,7 +14,7 @@ import (
 )
 
 var createCmd = &cobra.Command{
-	Use:   locales.L.Get("database.create.cmd"),
+	Use:   "create [SERVER] [DOMAIN] [NAME]",
 	Short: locales.L.Get("database.create.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var realdbt string = ""

@@ -9,7 +9,7 @@ import (
 )
 
 var listCmd = &cobra.Command{
-	Use:   locales.L.Get("server.list.cmd"),
+	Use:   "list",
 	Short: locales.L.Get("server.list.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cmd.SilenceUsage = true

@@ -11,7 +11,7 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   locales.L.Get("domain.delete.cmd"),
+	Use:   "delete [SERVER] [DOMAIN...]",
 	Short: locales.L.Get("domain.delete.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var lastErr error = nil

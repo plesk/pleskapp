@@ -11,7 +11,7 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   locales.L.Get("database.delete.cmd"),
+	Use:   "delete [SERVER] [NAME]",
 	Short: locales.L.Get("database.delete.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		server, err := config.GetServer(args[0])

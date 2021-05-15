@@ -11,7 +11,7 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   locales.L.Get("server.delete.cmd"),
+	Use:   "delete [IP ADDRESS|HOSTNAME ...]",
 	Short: locales.L.Get("server.delete.description"),
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, host := range args {

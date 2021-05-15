@@ -10,7 +10,7 @@ import (
 )
 
 var listCmd = &cobra.Command{
-	Use:   locales.L.Get("domain.list.cmd"),
+	Use:   "list [SERVER]",
 	Short: locales.L.Get("domain.list.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		server, err := config.GetServer(args[0])

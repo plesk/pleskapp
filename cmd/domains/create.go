@@ -14,7 +14,7 @@ import (
 )
 
 var createCmd = &cobra.Command{
-	Use:   locales.L.Get("domain.create.cmd"),
+	Use:   "create [SERVER] [DOMAIN] [IPv4] [IPv6]",
 	Short: locales.L.Get("domain.create.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		addr4 := []string{}

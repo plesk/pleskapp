@@ -10,7 +10,7 @@ import (
 )
 
 var loginCmd = &cobra.Command{
-	Use:   locales.L.Get("server.login.cmd"),
+	Use:   "login [SERVER]",
 	Short: locales.L.Get("server.login.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		generateOnly, _ := cmd.Flags().GetBool("generate")

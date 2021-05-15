@@ -15,7 +15,7 @@ import (
 )
 
 var registerCmd = &cobra.Command{
-	Use:   locales.L.Get("app.register.cmd"),
+	Use:   "register [SERVER] [DOMAIN] [PATH]",
 	Short: locales.L.Get("app.register.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		sPath, _ := cmd.Flags().GetString("target-path")

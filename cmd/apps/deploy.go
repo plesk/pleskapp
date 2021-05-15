@@ -18,7 +18,7 @@ import (
 )
 
 var deployCmd = &cobra.Command{
-	Use:   locales.L.Get("app.deploy.cmd"),
+	Use:   "deploy [PATH]",
 	Short: locales.L.Get("app.deploy.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		path, err := filepath.Abs(".")

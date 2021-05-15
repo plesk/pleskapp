@@ -11,7 +11,7 @@ import (
 )
 
 var reauthCmd = &cobra.Command{
-	Use:   locales.L.Get("server.reauth.cmd"),
+	Use:   "reauth [IP ADDRESS|HOSTNAME]",
 	Short: locales.L.Get("server.reauth.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		server, err := config.GetServer(args[0])

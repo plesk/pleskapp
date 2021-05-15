@@ -11,7 +11,7 @@ import (
 )
 
 var reloadCmd = &cobra.Command{
-	Use:   locales.L.Get("domain.reload.cmd"),
+	Use:   "reload [SERVER]",
 	Short: locales.L.Get("domain.reload.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		server, err := config.GetServer(args[0])

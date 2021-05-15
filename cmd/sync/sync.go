@@ -14,7 +14,7 @@ import (
 )
 
 var SyncCmd = &cobra.Command{
-	Use:   locales.L.Get("files.upload.cmd"),
+	Use:   "sync [SERVER] [DOMAIN] [FILE ...]",
 	Short: locales.L.Get("files.upload.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var lastErr error = nil
