@@ -4,6 +4,7 @@ package actions
 
 import (
 	"fmt"
+	"github.com/pkg/browser"
 	"strings"
 	"time"
 
@@ -84,14 +85,22 @@ func ServerAdd(host string, ignoreSsl bool) error {
 	return ServerUpdate(h)
 }
 
-func ServerLogin(host types.Server) error {
+func ServerLogin(host types.Server, generateOnly bool) error {
 	api := factory.GetAuthentication(host.GetServerAuth())
-	str, err := api.GetLoginLink(host.GetServerAuth())
+	url, err := api.GetLoginLink(host.GetServerAuth())
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Generated one-time login link: " + str)
+	if generateOnly {
+		fmt.Println("Generated one-time login link: " + url)
+	} else {
+		fmt.Println("Opening the browser with one-time login link...")
+		err := browser.OpenURL(url)
+		if err != nil {
+			fmt.Println("Unable to open the browser, use one-time login link on your own: " + url)
+		}
+	}
 
 	return nil
 }
