@@ -14,17 +14,17 @@ build: test
 
 release: test
 	GOOS=linux go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/linux/$(OUTFILE)
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-linux.tgz build/linux/$(OUTFILE)
+	tar czf ./build/$(OUTFILE)-v$(VERSION)-linux.tgz --directory=build/linux $(OUTFILE)
 	GOOS=darwin go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/mac/$(OUTFILE)
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-mac.tgz build/mac/$(OUTFILE)
+	tar czf ./build/$(OUTFILE)-v$(VERSION)-mac.tgz --directory=build/mac $(OUTFILE)
 	GOOS=windows go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/win/$(OUTFILE).exe
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-win.tgz build/win/$(OUTFILE).exe
+	tar czf ./build/$(OUTFILE)-v$(VERSION)-win.tgz --directory=build/win $(OUTFILE).exe
 
 run:
 	go run main.go
 
 clean:
-	$(RM) $(OUTFILE) ./build/*/$(OUTFILE)
+	$(RM) $(OUTFILE) ./build/*/$(OUTFILE) ./build/*.tgz
 
 test:
 	go test -v -cover ./...
