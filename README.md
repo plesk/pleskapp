@@ -1,8 +1,21 @@
 # PleskApp CLI
 
-PleskApp CLI is a tool that is installed on your local machine (not on the Plesk one) to manage Plesk remotely from the console. Target audiences are experienced administrators and developers who like to speed up the operations, automate routine procedures, manage the things using CLI.
+PleskApp CLI is a tool that is installed on your local machine (not on the Plesk one) to manage Plesk remotely
+from the console. Target audiences are experienced administrators and developers who like to speed up the
+operations, automate routine procedures, manage the things using CLI.
 
 Current development status is "early alpha version".
+
+# Installation
+
+Here is the command to install the utility:
+
+`curl -fsSL https://raw.githubusercontent.com/plesk/pleskapp/master/install.sh | bash`
+
+The utility will be installed to `/usr/local/bin/` directory, so please make sure the path is present in PATH
+environment variable. To test it one can use the following command:
+
+`plesk version`
 
 # How to Build
 
