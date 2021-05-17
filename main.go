@@ -16,11 +16,13 @@ import (
 var (
 	revision  string
 	buildTime string
+	version   string
 )
 
 func init() {
 	versionCmd.Revision = revision
 	versionCmd.BuildTime = buildTime
+	versionCmd.Version = version
 }
 
 func main() {

@@ -12,13 +12,15 @@ import (
 var (
 	Revision  string
 	BuildTime string
+	Version   string
 )
 
 var VersionCmd = &cobra.Command{
 	Use:   "version",
 	Short: locales.L.Get("version.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Printf("Revision:\t%s\nBuild time:\t%s\n", Revision, BuildTime)
+		fmt.Println("Client information")
+		fmt.Printf("Version:\t%s\nRevision:\t%s\nBuild time:\t%s\n", Version, Revision, BuildTime)
 
 		return nil
 	},
