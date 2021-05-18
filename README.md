@@ -19,7 +19,9 @@ environment variable. To test it one can use the following command:
 
 # How to Build
 
-The utility is written in Go, so standard toolchain should be used to build the binary:
+The utility is written in Go, so the corresponding toolchain should be installed first.
 
-`go build`
+There is a Makefile with bunch of targets. One can use the following command to build the binary:
+
+`make`
 
