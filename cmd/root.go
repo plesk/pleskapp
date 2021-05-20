@@ -28,6 +28,9 @@ func Execute() error {
 		serversCmd.ServersCmd,
 		syncCmd.SyncCmd,
 		versionCmd.VersionCmd,
+		contextCmd,
+		loginCmd,
+		sshCmd,
 	)
 
 	return rootCmd.Execute()

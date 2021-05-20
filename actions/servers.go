@@ -3,6 +3,7 @@
 package actions
 
 import (
+	"errors"
 	"fmt"
 	"github.com/pkg/browser"
 	"os"
@@ -144,8 +145,20 @@ func ServerUpdate(host types.Server) error {
 	host.DatabaseServers = *dbs
 	host.UpdatedAt = time.Now()
 
-	s, _ := utils.FilterServers(config.GetServers(), host.Host)
-	config.SetServers(append(s, host))
+	servers := config.GetServers()
+	found := false
+	for index, target := range servers {
+		if target.Host == host.Host {
+			servers[index] = host
+			found = true
+		}
+	}
+
+	if !found {
+		servers = append([]types.Server{host}, servers...)
+	}
+
+	config.SetServers(servers)
 
 	return nil
 }
@@ -195,4 +208,16 @@ func ServerRemove(host types.Server) error {
 	config.SetServers(keepServers)
 
 	return nil
+}
+
+func DefaultServer() (string, error) {
+	servers := config.GetServers()
+
+	if len(servers) == 0 {
+		return "", errors.New("context is not defined")
+	}
+
+	defaultServer := servers[0]
+
+	return defaultServer.Host, nil
 }
