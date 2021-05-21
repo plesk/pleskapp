@@ -6,7 +6,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/plesk/pleskapp/plesk/locales"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/plesk/pleskapp/plesk/types"
@@ -57,12 +59,26 @@ func Save(f *os.File) error {
 }
 
 func GetServer(host string) (*types.Server, error) {
-	_, server := utils.FilterServers(GetServers(), host)
-	if len(server) == 0 {
-		return nil, types.ServerNotFound{Server: host}
+	servers := GetServers()
+
+	var foundServer *types.Server
+	found := 0
+	for index, server := range servers {
+		if strings.HasPrefix(server.Host, host) {
+			found += 1
+			foundServer = &servers[index]
+		}
 	}
 
-	return &server[0], nil
+	if found == 1 {
+		return foundServer, nil
+	}
+
+	if found > 1 {
+		return nil, fmt.Errorf(locales.L.Get("errors.multiple.servers", host))
+	}
+
+	return nil, types.ServerNotFound{Server: host}
 }
 
 func GetServers() []types.Server {

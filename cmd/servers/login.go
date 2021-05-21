@@ -12,6 +12,8 @@ var ServerLoginCmd = &cobra.Command{
 	Use:   "login [SERVER]",
 	Short: locales.L.Get("server.login.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		cmd.SilenceUsage = true
+
 		generateOnly, _ := cmd.Flags().GetBool("generate")
 
 		server, err := getServer(args)
@@ -19,7 +21,6 @@ var ServerLoginCmd = &cobra.Command{
 			return err
 		}
 
-		cmd.SilenceUsage = true
 		return actions.ServerLogin(*server, generateOnly)
 	},
 	Args: cobra.MaximumNArgs(1),

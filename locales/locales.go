@@ -102,6 +102,7 @@ func init() {
 			"errors.ip.address.not.cached":     "Could not find specified IP address(es) in cache, use command \"servers reload %s\" to reload cached data",
 			"errors.ip.address.not.found":      "Could not find specified IP address(es) on the server %s",
 			"errors.server.not.found":          "Server %s is not registered, use command \"servers register\" to add it",
+			"errors.multiple.servers":          "several servers matched the name '%s'",
 			"errors.domain.not.cached":         "Domain %s does not exist on server %s, use command \"servers reload %s\" to reload cached data",
 			"errors.database.not.found":        "Database %s does not exist on server %s, use command \"databases create\" to add it",
 			"errors.database.server.not.found": "Database server with type %s does not exist on server %s",
