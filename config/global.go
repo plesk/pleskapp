@@ -44,7 +44,7 @@ func Save(f *os.File) error {
 		return fmt.Errorf("Cannot save configuration")
 	}
 
-	str, err := json.Marshal(globalConfig.config)
+	str, err := json.MarshalIndent(globalConfig.config, "", "  ")
 	if err != nil {
 		return err
 	}
