@@ -81,6 +81,7 @@ func init() {
 			"server.register.description":     "Register a new server on this device",
 			"server.register.ignore.ssl.flag": "Ignore SSL certificate mismatch",
 			"server.register.success":         "Server successfully registered",
+			"server.register.api-key":         "API key",
 			"server.reload.description":       "Reload cached server data",
 			"server.reload.success":           "Server data successfully reloaded",
 			"server.reauth.description":       "Update server API key",
