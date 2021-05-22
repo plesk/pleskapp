@@ -4,7 +4,7 @@ package utils
 
 import (
 	"fmt"
-	randn "math/rand"
+	"math/rand"
 	"strings"
 	"syscall"
 	"time"
@@ -12,6 +12,8 @@ import (
 	"github.com/plesk/pleskapp/plesk/types"
 	"golang.org/x/term"
 )
+
+const allowedChars = "abcdefghijklmnopqrstuvwxyz"
 
 func FilterDomains(elements []types.Domain, filterOut string) ([]types.Domain, []types.Domain) {
 	var keep []types.Domain
@@ -60,36 +62,35 @@ func FilterServers(elements []types.Server, filterOut string) ([]types.Server, [
 
 func GenPassword(length int) string {
 	var charsets = [][]string{
-		strings.Split("abcdefghijklmnopqrstuvwxyz", ""),
+		strings.Split(allowedChars, ""),
 		strings.Split("0123456789", ""),
 		// Symbol "&" may cause REST API to fail
 		strings.Split("!@#$%^*()-=+_", ""),
 	}
 
-	randn.Seed(time.Now().Unix())
-	var pw string = ""
+	rand.Seed(time.Now().Unix())
+	pw := ""
 	for i := 0; i < length; i++ {
-		pw += charsets[i%3][randn.Intn(len(charsets[i%3]))]
+		pw += charsets[i%3][rand.Intn(len(charsets[i%3]))]
 	}
 
 	pwb := []rune(pw)
-	randn.Shuffle(len(pwb), func(i, j int) { pwb[i], pwb[j] = pwb[j], pwb[i] })
+	rand.Shuffle(len(pwb), func(i, j int) { pwb[i], pwb[j] = pwb[j], pwb[i] })
 
 	return string(pwb)
 }
 
 func GenUsername(length int) string {
-	const allowedChars = "abcdefghijklmnopqrstuvwxyz"
 	var charset = strings.Split(allowedChars, "")
 
-	randn.Seed(time.Now().Unix())
-	var pw string = ""
+	rand.Seed(time.Now().Unix())
+	pw := ""
 	for i := 0; i < length; i++ {
-		pw += charset[randn.Intn(len(charset))]
+		pw += charset[rand.Intn(len(charset))]
 	}
 
 	pwb := []rune(pw)
-	randn.Shuffle(len(pwb), func(i, j int) { pwb[i], pwb[j] = pwb[j], pwb[i] })
+	rand.Shuffle(len(pwb), func(i, j int) { pwb[i], pwb[j] = pwb[j], pwb[i] })
 
 	return string(pwb)
 }
@@ -97,7 +98,7 @@ func GenUsername(length int) string {
 func RequestPassword(reason string) (string, error) {
 	fmt.Println(reason)
 
-	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	bytePassword, err := term.ReadPassword(syscall.Stdin)
 	if err != nil {
 		return "", err
 	}
