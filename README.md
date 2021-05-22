@@ -1,4 +1,5 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/plesk/pleskapp)](https://goreportcard.com/report/github.com/plesk/pleskapp)
+![test](https://github.com/plesk/pleskapp/actions/workflows/test.yml/badge.svg)
+![Go Report Card](https://goreportcard.com/badge/github.com/plesk/pleskapp)
 
 # PleskApp CLI
 
