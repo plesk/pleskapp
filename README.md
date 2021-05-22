@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/plesk/pleskapp)](https://goreportcard.com/report/github.com/plesk/pleskapp)
+
 # PleskApp CLI
 
 PleskApp CLI is a tool that is installed on your local machine (not on the Plesk one) to manage Plesk remotely
