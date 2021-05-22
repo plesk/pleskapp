@@ -1,0 +1,16 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.16
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          go mod download
+          make
