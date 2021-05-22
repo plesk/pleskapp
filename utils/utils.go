@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/plesk/pleskapp/plesk/types"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 func FilterDomains(elements []types.Domain, filterOut string) ([]types.Domain, []types.Domain) {
@@ -97,7 +97,7 @@ func GenUsername(length int) string {
 func RequestPassword(reason string) (string, error) {
 	fmt.Println(reason)
 
-	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return "", err
 	}
