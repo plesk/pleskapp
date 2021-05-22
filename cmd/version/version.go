@@ -4,7 +4,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/plesk/pleskapp/plesk/actions"
 	"github.com/plesk/pleskapp/plesk/config"
 
 	"github.com/plesk/pleskapp/plesk/locales"
@@ -24,7 +23,7 @@ var VersionCmd = &cobra.Command{
 		fmt.Println("Client information")
 		fmt.Printf("Version:\t%s\nRevision:\t%s\nBuild time:\t%s\n", Version, Revision, BuildTime)
 
-		defaultServerName, err := actions.DefaultServer()
+		defaultServerName, err := config.DefaultServer()
 		if err == nil {
 			server, _ := config.GetServer(defaultServerName)
 			fmt.Println()

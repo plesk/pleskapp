@@ -5,6 +5,7 @@ package config
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"os"
@@ -79,6 +80,33 @@ func GetServer(host string) (*types.Server, error) {
 	}
 
 	return nil, types.ServerNotFound{Server: host}
+}
+
+func GetServerByArgs(args []string) (*types.Server, error) {
+	var serverName string
+	if len(args) == 0 {
+		serverName, _ = DefaultServer()
+	} else {
+		serverName = args[0]
+	}
+
+	server, err := GetServer(serverName)
+	if err != nil {
+		return nil, err
+	}
+	return server, nil
+}
+
+func DefaultServer() (string, error) {
+	servers := GetServers()
+
+	if len(servers) == 0 {
+		return "", errors.New("context is not defined")
+	}
+
+	defaultServer := servers[0]
+
+	return defaultServer.Host, nil
 }
 
 func GetServers() []types.Server {

@@ -4,7 +4,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/plesk/pleskapp/plesk/actions"
 	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/plesk/pleskapp/plesk/types"
@@ -26,7 +25,7 @@ var contextCmd = &cobra.Command{
 			config.SetServers(append([]types.Server{*server}, servers...))
 		}
 
-		defaultServer, err := actions.DefaultServer()
+		defaultServer, err := config.DefaultServer()
 		if err != nil {
 			return err
 		}

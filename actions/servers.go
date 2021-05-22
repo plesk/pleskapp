@@ -3,7 +3,6 @@
 package actions
 
 import (
-	"errors"
 	"fmt"
 	"github.com/pkg/browser"
 	"os"
@@ -208,16 +207,4 @@ func ServerRemove(host types.Server) error {
 	config.SetServers(keepServers)
 
 	return nil
-}
-
-func DefaultServer() (string, error) {
-	servers := config.GetServers()
-
-	if len(servers) == 0 {
-		return "", errors.New("context is not defined")
-	}
-
-	defaultServer := servers[0]
-
-	return defaultServer.Host, nil
 }

@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"github.com/plesk/pleskapp/plesk/actions"
+	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +15,7 @@ var SshCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cmd.SilenceUsage = true
 
-		server, err := getServer(args)
+		server, err := config.GetServerByArgs(args)
 		if err != nil {
 			return err
 		}

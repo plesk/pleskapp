@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"github.com/plesk/pleskapp/plesk/actions"
+	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +17,7 @@ var ServerLoginCmd = &cobra.Command{
 
 		generateOnly, _ := cmd.Flags().GetBool("generate")
 
-		server, err := getServer(args)
+		server, err := config.GetServerByArgs(args)
 		if err != nil {
 			return err
 		}
