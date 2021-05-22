@@ -36,8 +36,7 @@ func (l *locale) Get(def string, vars ...interface{}) string {
 func init() {
 	// TODO: Proper locale detections & locale support
 
-	var defs map[string]map[string]string
-	defs = map[string]map[string]string{
+	defs := map[string]map[string]string{
 		"en_US": {
 			"app.description":                   "Manage local applications",
 			"app.deploy.description":            "Deploy application in set PATH to DOMAIN on SERVER",

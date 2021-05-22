@@ -97,14 +97,9 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 		return nil, errors.New(locales.L.Get("errors.ip.address.class.limit"))
 	}
 
-	var ip = []string{}
-
-	for _, a := range ipa.IPv4 {
-		ip = append(ip, a)
-	}
-	for _, a := range ipa.IPv6 {
-		ip = append(ip, a)
-	}
+	var ip []string
+	ip = append(ip, ipa.IPv4...)
+	ip = append(ip, ipa.IPv6...)
 
 	p := createDomainRequest{
 		Name:        d,

@@ -44,7 +44,7 @@ func New(f *os.File) error {
 
 func Save(f *os.File) error {
 	if f == nil {
-		return fmt.Errorf("Cannot save configuration")
+		return fmt.Errorf("cannot save configuration")
 	}
 
 	str, err := json.MarshalIndent(globalConfig.config, "", "  ")
@@ -66,7 +66,7 @@ func GetServer(host string) (*types.Server, error) {
 	found := 0
 	for index, server := range servers {
 		if strings.HasPrefix(server.Host, host) {
-			found += 1
+			found++
 			foundServer = &servers[index]
 		}
 	}

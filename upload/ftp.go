@@ -63,7 +63,7 @@ func Connect(creds types.FtpUser, server string, docRoot string) (*ftpConnection
 			_ = connection.inner.NoOp()
 			connection.active.Unlock()
 
-			time.Sleep(15)
+			time.Sleep(15 * time.Second)
 		}
 	}(&connection)
 

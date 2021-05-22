@@ -11,34 +11,34 @@ import (
 	"github.com/plesk/pleskapp/plesk/locales"
 )
 
-type createApiKeyRequest struct {
+type createAPIKeyRequest struct {
 	IP          string `json:"ip"`
 	Login       string `json:"login"`
 	Description string `json:"description"`
 }
 
-type createApiKeyResponse struct {
+type createAPIKeyResponse struct {
 	Key string `json:"key"`
 }
 
-//JsonAuth gets API keys via REST CLI Gate
-type JsonAuth struct {
+// Auth gets API keys via REST CLI Gate
+type Auth struct {
 	client *resty.Client
 }
 
-func NewAuth(c *resty.Client) JsonAuth {
-	return JsonAuth{
+func NewAuth(c *resty.Client) Auth {
+	return Auth{
 		client: c,
 	}
 }
 
 //GetAPIKey gets API keys via REST CLI Gate
-func (j JsonAuth) GetAPIKey(a api.Auth) (string, error) {
+func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 	// FIXME: Enable direct call when 18.0.25-18.0.28 are no longer used:
 	//  https://jira.plesk.ru/browse/PPP-49425
 
 	if false {
-		p := createApiKeyRequest{
+		p := createAPIKeyRequest{
 			IP:          "",
 			Login:       "admin",
 			Description: "PleskApp API key",
@@ -50,7 +50,7 @@ func (j JsonAuth) GetAPIKey(a api.Auth) (string, error) {
 
 		res, err := j.client.R().
 			SetBody(req).
-			SetResult(&createApiKeyResponse{}).
+			SetResult(&createAPIKeyResponse{}).
 			SetError(&jsonError{}).
 			Post("/api/v2/auth/keys")
 
@@ -59,7 +59,7 @@ func (j JsonAuth) GetAPIKey(a api.Auth) (string, error) {
 		}
 
 		if res.IsSuccess() {
-			var r *createApiKeyResponse = res.Result().(*createApiKeyResponse)
+			var r *createAPIKeyResponse = res.Result().(*createAPIKeyResponse)
 			return r.Key, nil
 		}
 
@@ -111,7 +111,7 @@ func (j JsonAuth) GetAPIKey(a api.Auth) (string, error) {
 	return "", jsonErrorToError(*r)
 }
 
-func (j JsonAuth) GetLoginLink(auth api.Auth) (string, error) {
+func (j Auth) GetLoginLink(auth api.Auth) (string, error) {
 	p := cliGateRequest{
 		Params: []string{
 			"--get-login-link",
@@ -150,13 +150,9 @@ func (j JsonAuth) GetLoginLink(auth api.Auth) (string, error) {
 	return "", jsonErrorToError(*r)
 }
 
-type removeAPIKey struct {
-	Params []string `json:"params"`
-}
-
-//RemoveAPIKey removes API key via REST CLI Gate
-func (j JsonAuth) RemoveAPIKey(auth api.Auth) (string, error) {
-	key := auth.GetApiKey()
+// RemoveAPIKey removes API key via REST CLI Gate
+func (j Auth) RemoveAPIKey(auth api.Auth) (string, error) {
+	key := auth.GetAPIKey()
 	res, err := j.client.R().
 		SetError(&jsonError{}).
 		Delete("/api/v2/auth/keys/" + *key)

@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/plesk/pleskapp/plesk/cmd"
-	versionCmd "github.com/plesk/pleskapp/plesk/cmd/version"
 	"github.com/plesk/pleskapp/plesk/config"
 	"github.com/plesk/pleskapp/plesk/locales"
 	"github.com/plesk/pleskapp/plesk/utils"
@@ -20,15 +19,15 @@ var (
 )
 
 func init() {
-	versionCmd.Revision = revision
-	versionCmd.BuildTime = buildTime
-	versionCmd.Version = version
+	cmd.Revision = revision
+	cmd.BuildTime = buildTime
+	cmd.Version = version
 }
 
 func main() {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		panic(fmt.Errorf("Failed obtaining current user home directory: %s", err))
+		panic(fmt.Errorf("failed obtaining current user home directory: %s", err))
 	}
 
 	path := home + "/.pleskrc"

@@ -83,7 +83,7 @@ type Authentication interface {
 
 type Server interface {
 	GetInfo() (ServerInfo, error)
-	GetIpAddresses() (types.ServerIPAddresses, error)
+	GetIPAddresses() (types.ServerIPAddresses, error)
 }
 
 type ServerInfo struct {
@@ -100,7 +100,7 @@ type Auth interface {
 	GetPort() string
 	GetIgnoreSsl() bool
 	GetIsWindows() bool
-	GetApiKey() *string
+	GetAPIKey() *string
 	GetLogin() *string
 	GetPassword() *string
 }

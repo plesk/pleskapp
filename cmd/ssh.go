@@ -12,7 +12,7 @@ var sshCmd = &cobra.Command{
 	Use:   "ssh [SERVER]",
 	Short: locales.L.Get("server.ssh.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return serversCmd.SshCmd.RunE(cmd, args)
+		return serversCmd.SSHCmd.RunE(cmd, args)
 	},
 	Args: cobra.MaximumNArgs(1),
 }

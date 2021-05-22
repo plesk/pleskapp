@@ -29,7 +29,7 @@ func buildClient(a api.Auth) *resty.Client {
 
 	login := a.GetLogin()
 	pass := a.GetPassword()
-	key := a.GetApiKey()
+	key := a.GetAPIKey()
 
 	if login != nil && pass != nil {
 		r.SetBasicAuth(*login, *pass)

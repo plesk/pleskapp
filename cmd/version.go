@@ -10,13 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version information
 var (
 	Revision  string
 	BuildTime string
 	Version   string
 )
 
-var VersionCmd = &cobra.Command{
+var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: locales.L.Get("version.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {

@@ -50,7 +50,7 @@ func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) er
 	}
 
 	v4Valid, v6Valid := validateIps(ipa, host.Info.IP)
-	if v4Valid != true || v6Valid != true {
+	if !v4Valid || !v6Valid {
 		return errors.New(locales.L.Get("errors.ip.address.not.cached", host.Host))
 	}
 

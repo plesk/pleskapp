@@ -15,7 +15,7 @@ type jsonInfo struct {
 type serverInfo struct {
 	Platform           string `json:"platform"`
 	Hostname           string `json:"hostname"`
-	Guid               string `json:"guid"`
+	GUID               string `json:"guid"`
 	PanelVersion       string `json:"panel_version"`
 	PanelRevision      string `json:"panel_revision"`
 	PanelBuildDate     string `json:"panel_build_date"`
@@ -64,7 +64,7 @@ func (j jsonInfo) GetInfo() (api.ServerInfo, error) {
 	return api.ServerInfo{}, jsonErrorToError(*r)
 }
 
-func (j jsonInfo) GetIpAddresses() (types.ServerIPAddresses, error) {
+func (j jsonInfo) GetIPAddresses() (types.ServerIPAddresses, error) {
 	res, err := j.client.R().
 		SetResult([]serverIPAddresses{}).
 		SetError(&jsonError{}).

@@ -78,10 +78,9 @@ func GenPassword(length int) string {
 	return string(pwb)
 }
 
-var allowedChars = "abcdefghijklmnopqrstuvwxyz"
-
 func GenUsername(length int) string {
-	var charset = strings.Split("abcdefghijklmnopqrstuvwxyz", "")
+	const allowedChars = "abcdefghijklmnopqrstuvwxyz"
+	var charset = strings.Split(allowedChars, "")
 
 	randn.Seed(time.Now().Unix())
 	var pw string = ""

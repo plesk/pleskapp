@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var SshCmd = &cobra.Command{
+var SSHCmd = &cobra.Command{
 	Use:   "ssh [SERVER]",
 	Short: locales.L.Get("server.ssh.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -20,11 +20,11 @@ var SshCmd = &cobra.Command{
 			return err
 		}
 
-		return actions.ServerSsh(*server)
+		return actions.ServerSSH(*server)
 	},
 	Args: cobra.MaximumNArgs(1),
 }
 
 func init() {
-	ServersCmd.AddCommand(SshCmd)
+	ServersCmd.AddCommand(SSHCmd)
 }

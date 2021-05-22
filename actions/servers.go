@@ -17,7 +17,7 @@ import (
 	"github.com/plesk/pleskapp/plesk/utils"
 )
 
-const ADMIN_USER = "admin"
+const AdminUser = "admin"
 
 func getServerInfo(a types.ServerAuth) (*api.ServerInfo, *types.ServerIPAddresses, *[]types.DatabaseServer, error) {
 	apiI := factory.GetServerInfo(a)
@@ -26,7 +26,7 @@ func getServerInfo(a types.ServerAuth) (*api.ServerInfo, *types.ServerIPAddresse
 		return nil, nil, nil, err
 	}
 
-	ipAddr, err := apiI.GetIpAddresses()
+	ipAddr, err := apiI.GetIPAddresses()
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -57,7 +57,7 @@ func ServerAdd(host string, ignoreSsl bool) error {
 	if err == nil {
 		return fmt.Errorf("Server with address " + host + " is already registered")
 	}
-	login := ADMIN_USER
+	login := AdminUser
 	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host + ":")
 	if err != nil {
 		return err
@@ -107,7 +107,7 @@ func ServerLogin(host types.Server, generateOnly bool) error {
 	return nil
 }
 
-func ServerSsh(host types.Server) error {
+func ServerSSH(host types.Server) error {
 	fmt.Printf("Login to %s using SSH...\n", host.Host)
 
 	cmd := exec.Command("ssh", host.Host)

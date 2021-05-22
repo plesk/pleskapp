@@ -147,5 +147,5 @@ func (a ServerAuth) GetLogin() *string { return a.Login }
 // GetPassword impl Auth
 func (a ServerAuth) GetPassword() *string { return a.Password }
 
-// GetApiKey impl Auth
-func (a ServerAuth) GetApiKey() *string { return a.APIKey }
+// GetAPIKey impl Auth
+func (a ServerAuth) GetAPIKey() *string { return a.APIKey }
