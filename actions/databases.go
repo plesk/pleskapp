@@ -77,8 +77,8 @@ func DatabaseDeploy(host types.Server, domain types.Domain, db types.Database, f
 	}
 	if dbu == nil {
 		u := &types.NewDatabaseUser{
-			Login:    utils.GenUsername(16),
-			Password: utils.GenPassword(24),
+			Login:    utils.GenerateUsername(16),
+			Password: utils.GeneratePassword(24),
 		}
 
 		apiU := factory.GetDatabaseUserManagement(host.GetServerAuth())

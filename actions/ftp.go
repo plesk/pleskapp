@@ -19,8 +19,8 @@ func FindCachedFtpUser(domain types.Domain) *types.FtpUser {
 func FtpUserCreate(host types.Server, domain types.Domain, user *types.FtpUser) (*types.FtpUser, error) {
 	if user == nil {
 		user = &types.FtpUser{
-			Login:    utils.GenUsername(16),
-			Password: utils.GenPassword(32),
+			Login:    utils.GenerateUsername(16),
+			Password: utils.GeneratePassword(32),
 		}
 	}
 

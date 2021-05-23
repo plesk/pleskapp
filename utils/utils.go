@@ -60,7 +60,7 @@ func FilterServers(elements []types.Server, filterOut string) ([]types.Server, [
 	return keep, remove
 }
 
-func GenPassword(length int) string {
+func GeneratePassword(length int) string {
 	var charsets = [][]string{
 		strings.Split(allowedChars, ""),
 		strings.Split("0123456789", ""),
@@ -68,7 +68,7 @@ func GenPassword(length int) string {
 		strings.Split("!@#$%^*()-=+_", ""),
 	}
 
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	pw := ""
 	for i := 0; i < length; i++ {
 		pw += charsets[i%3][rand.Intn(len(charsets[i%3]))]
@@ -80,10 +80,10 @@ func GenPassword(length int) string {
 	return string(pwb)
 }
 
-func GenUsername(length int) string {
+func GenerateUsername(length int) string {
 	var charset = strings.Split(allowedChars, "")
 
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	pw := ""
 	for i := 0; i < length; i++ {
 		pw += charset[rand.Intn(len(charset))]

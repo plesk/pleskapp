@@ -106,8 +106,8 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 		Description: "",
 		HostingType: "virtual",
 		HostingSettings: hostingSettings{
-			FtpLogin:    utils.GenUsername(16),
-			FtpPassword: utils.GenPassword(32),
+			FtpLogin:    utils.GenerateUsername(16),
+			FtpPassword: utils.GeneratePassword(32),
 		},
 		IPAddresses: ip,
 	}
