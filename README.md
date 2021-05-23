@@ -1,5 +1,6 @@
 [![build](https://github.com/plesk/pleskapp/actions/workflows/test.yml/badge.svg)](https://github.com/plesk/pleskapp/actions?query=workflow%3Atest)
 [![Go Report Card](https://goreportcard.com/badge/github.com/plesk/pleskapp)](https://goreportcard.com/report/github.com/plesk/pleskapp)
+[![Scc Count](https://sloc.xyz/github/plesk/pleskapp/)](https://github.com/plesk/pleskapp/)
 
 # PleskApp CLI
 
