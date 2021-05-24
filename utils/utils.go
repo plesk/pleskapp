@@ -98,7 +98,7 @@ func GenerateUsername(length int) string {
 func RequestPassword(reason string) (string, error) {
 	fmt.Println(reason)
 
-	bytePassword, err := term.ReadPassword(syscall.Stdin)
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return "", err
 	}
