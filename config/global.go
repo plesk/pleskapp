@@ -159,7 +159,7 @@ func SetServers(newData []types.Server) {
 func SetDomains(host types.Server, newData []types.Domain) {
 	servers, _ := utils.FilterServers(GetServers(), host.Host)
 	host.Domains = newData
-	SetServers(append(servers, host))
+	SetServers(append([]types.Server{host}, servers...))
 }
 
 func SetDomain(host types.Server, domain types.Domain) {
