@@ -7,7 +7,8 @@ import (
 	"github.com/pkg/browser"
 	"os"
 	"os/exec"
-	"strings"
+	"sort"
+	"text/tabwriter"
 	"time"
 
 	"github.com/plesk/pleskapp/plesk/api"
@@ -118,17 +119,38 @@ func ServerSSH(host types.Server) error {
 }
 
 func ServerList() error {
-	for _, i := range config.GetServers() {
-		fmt.Printf(
-			"Address: %s\nVersion: %s\nIPv4: %s\nIPv6: %s\n\n",
-			i.Host,
-			i.Info.Version,
-			strings.Join(i.Info.IP.IPv4, ","),
-			strings.Join(i.Info.IP.IPv6, ","),
+	servers := config.GetServers()
+	sort.Slice(servers, func(i, j int) bool { return servers[i].Host < servers[j].Host })
+
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 2, ' ', 0)
+	_, _ = fmt.Fprintln(w, "HOST\tPLATFORM\tVERSION\tIPV4\tIPV6")
+
+	for _, server := range servers {
+		ipv4 := "-"
+		if len(server.Info.IP.IPv4) > 0 {
+			ipv4 = server.Info.IP.IPv4[0]
+		}
+
+		ipv6 := "-"
+		if len(server.Info.IP.IPv6) > 0 {
+			ipv6 = server.Info.IP.IPv6[0]
+		}
+
+		platform := "Linux"
+		if server.Info.IsWindows {
+			platform = "Windows"
+		}
+
+		_, _ = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
+			server.Host,
+			platform,
+			server.Info.Version,
+			ipv4,
+			ipv6,
 		)
 	}
 
-	return nil
+	return w.Flush()
 }
 
 // ServerUpdate reloads and recaches server info
