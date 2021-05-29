@@ -5,6 +5,9 @@ package actions
 import (
 	"errors"
 	"fmt"
+	"os"
+	"sort"
+	"text/tabwriter"
 
 	"github.com/plesk/pleskapp/plesk/api/factory"
 	"github.com/plesk/pleskapp/plesk/config"
@@ -67,9 +70,15 @@ func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) er
 }
 
 func DomainList(host types.Server) error {
-	for _, domain := range host.Domains {
-		utils.Log.Print(fmt.Sprintf("Name: %s\nGUID: %s\n\n", domain.Name, domain.GUID))
+	domains := host.Domains
+	sort.Slice(domains, func(i, j int) bool { return domains[i].Name < domains[j].Name })
+
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	fmt.Fprintln(w, "DOMAIN\tGUID")
+	for _, domain := range domains {
+		fmt.Fprintf(w, "%s\t%s\n", domain.Name, domain.GUID)
 	}
+	w.Flush()
 
 	return nil
 }
