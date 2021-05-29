@@ -78,7 +78,7 @@ func DomainList(host types.Server) error {
 	domains := host.Domains
 	sort.Slice(domains, func(i, j int) bool { return domains[i].Name < domains[j].Name })
 
-	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 2, ' ', 0)
 	_, _ = fmt.Fprintln(w, "DOMAIN\tGUID")
 	for _, domain := range domains {
 		_, _ = fmt.Fprintf(w, "%s\t%s\n", domain.Name, domain.GUID)
