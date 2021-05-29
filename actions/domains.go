@@ -79,13 +79,12 @@ func DomainList(host types.Server) error {
 	sort.Slice(domains, func(i, j int) bool { return domains[i].Name < domains[j].Name })
 
 	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
-	fmt.Fprintln(w, "DOMAIN\tGUID")
+	_, _ = fmt.Fprintln(w, "DOMAIN\tGUID")
 	for _, domain := range domains {
-		fmt.Fprintf(w, "%s\t%s\n", domain.Name, domain.GUID)
+		_, _ = fmt.Fprintf(w, "%s\t%s\n", domain.Name, domain.GUID)
 	}
-	w.Flush()
 
-	return nil
+	return w.Flush()
 }
 
 func DomainReload(host types.Server) error {
