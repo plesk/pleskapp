@@ -70,6 +70,11 @@ func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) er
 }
 
 func DomainList(host types.Server) error {
+	err := DomainReload(host)
+	if err != nil {
+		return err
+	}
+
 	domains := host.Domains
 	sort.Slice(domains, func(i, j int) bool { return domains[i].Name < domains[j].Name })
 
