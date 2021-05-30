@@ -30,6 +30,7 @@ func Execute() error {
 		contextCmd,
 		loginCmd,
 		sshCmd,
+		webCmd,
 	)
 
 	return rootCmd.Execute()

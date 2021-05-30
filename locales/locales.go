@@ -136,6 +136,8 @@ func init() {
 			"version.description": "Display client version",
 
 			"context.description": "Manage current context (Plesk server)",
+
+			"web.description": "Run local web server to serve current directory",
 		},
 	}
 
