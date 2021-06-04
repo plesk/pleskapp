@@ -138,6 +138,8 @@ func init() {
 			"context.description": "Manage current context (Plesk server)",
 
 			"web.description": "Run local web server to serve current directory",
+
+			"completion.description": "Output shell completion code for the specified shell",
 		},
 	}
 

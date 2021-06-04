@@ -31,6 +31,7 @@ func Execute() error {
 		loginCmd,
 		sshCmd,
 		webCmd,
+		completionCmd,
 	)
 
 	return rootCmd.Execute()
