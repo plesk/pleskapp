@@ -14,12 +14,16 @@ Current development status is "early alpha version".
 
 Here is the command to install the utility:
 
-`curl -fsSL https://raw.githubusercontent.com/plesk/pleskapp/master/install.sh | bash`
+```
+curl -fsSL https://raw.githubusercontent.com/plesk/pleskapp/master/install.sh | bash
+```
 
 The utility will be installed to `/usr/local/bin/` directory, so please make sure the path is present in PATH
 environment variable. To test it one can use the following command:
 
-`plesk version`
+```
+plesk version
+```
 
 # How to Build
 
@@ -27,5 +31,7 @@ The utility is written in Go, so the corresponding toolchain should be installed
 
 There is a Makefile with bunch of targets. One can use the following command to build the binary:
 
-`make`
+```
+make
+```
 
