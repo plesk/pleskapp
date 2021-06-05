@@ -133,7 +133,7 @@ func init() {
 
 			"upload.dry.run.upload": "Dry run; would upload file %s to %s",
 
-			"version.description": "Display client version",
+			"version.description": "Display client and default server versions",
 
 			"context.description": "Manage current context (Plesk server)",
 
