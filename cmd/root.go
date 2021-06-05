@@ -32,6 +32,7 @@ func Execute() error {
 		sshCmd,
 		webCmd,
 		completionCmd,
+		pleskCmd,
 	)
 
 	return rootCmd.Execute()
