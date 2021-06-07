@@ -89,6 +89,10 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 	}
 
 	return filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if info.IsDir() && (info.Name() == ".git" || info.Name() == ".idea") {
+			return filepath.SkipDir
+		}
+
 		pathPart := strings.TrimPrefix(p, dir)
 		if pathPart == "." {
 			return nil

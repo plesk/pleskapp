@@ -33,6 +33,7 @@ func Execute() error {
 		webCmd,
 		completionCmd,
 		pleskCmd,
+		deployCmd,
 	)
 
 	return rootCmd.Execute()

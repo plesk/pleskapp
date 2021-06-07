@@ -140,6 +140,8 @@ func init() {
 			"web.description": "Run local web server to serve current directory",
 
 			"completion.description": "Output shell completion code for the specified shell",
+
+			"deploy.description": "Deploy the app in the current directory to default server",
 		},
 	}
 
