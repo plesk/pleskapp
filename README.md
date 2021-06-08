@@ -10,6 +10,18 @@ operations, automate routine procedures, manage the things using CLI.
 
 Current development status is "early alpha version".
 
+# Features
+
+Here is the list of features:
+* `plesk servers` - Manage known servers
+* `plesk login` - Automatic login to the server (in the browser)
+* `plesk ssh` - Login to server using SSH
+* `plesk domains` - Manage domains on the server
+* `plesk databases` - Manage databases on the server
+* `plesk web` - Run local web server to serve current directory
+* `plesk deploy` - Deploy the app from the current directory to default server
+* Bash and ZSH autocompletion support
+
 # Installation
 
 Here is the command to install the utility:
