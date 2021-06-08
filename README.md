@@ -10,6 +10,10 @@ operations, automate routine procedures, manage the things using CLI.
 
 Current development status is "early alpha version".
 
+# Demo
+
+![Demo](./demo.svg)
+
 # Features
 
 Here is the list of features:
