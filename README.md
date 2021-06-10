@@ -41,6 +41,12 @@ environment variable. To test it one can use the following command:
 plesk version
 ```
 
+Alternative way if you have Go 1.16+ installed:
+
+```
+go install github.com/plesk/pleskapp/plesk
+```
+
 # How to Build
 
 The utility is written in Go, so the corresponding toolchain should be installed first.
