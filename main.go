@@ -20,7 +20,7 @@ var (
 func init() {
 	cmd.Commit = commit
 	cmd.BuildTime = date
-	cmd.Version = version[1:]
+	cmd.Version = version
 }
 
 func main() {
