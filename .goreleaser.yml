@@ -1,0 +1,27 @@
+project_name: plesk
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}"
+    replacements:
+      darwin: mac
+      linux: linux
+      windows: win
+      amd64: x86_64
+    format: tgz
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}"

@@ -1,6 +1,4 @@
 .vscode
 /plesk
 /.plesk
-/plesk.exe
-/build/*/plesk*
-/build/*.tgz
+/dist/

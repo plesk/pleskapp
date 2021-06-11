@@ -12,7 +12,7 @@ import (
 
 // Version information
 var (
-	Revision  string
+	Commit    string
 	BuildTime string
 	Version   string
 )
@@ -22,7 +22,7 @@ var versionCmd = &cobra.Command{
 	Short: locales.L.Get("version.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Client information")
-		fmt.Printf("Version:\t%s\nRevision:\t%s\nBuild time:\t%s\n", Version, Revision, BuildTime)
+		fmt.Printf("Version:\t%s\nRevision:\t%s\nBuild time:\t%s\n", Version, Commit, BuildTime)
 
 		defaultServerName, err := config.DefaultServer()
 		if err == nil {

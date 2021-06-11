@@ -12,15 +12,15 @@ import (
 )
 
 var (
-	revision  string
-	buildTime string
-	version   string
+	commit  string
+	date    string
+	version string
 )
 
 func init() {
-	cmd.Revision = revision
-	cmd.BuildTime = buildTime
-	cmd.Version = version
+	cmd.Commit = commit
+	cmd.BuildTime = date
+	cmd.Version = version[1:]
 }
 
 func main() {

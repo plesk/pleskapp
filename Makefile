@@ -1,11 +1,10 @@
 # Copyright 1999-2021. Plesk International GmbH.
 
 OUTFILE=plesk
-REVISON:=$(shell git rev-parse --short HEAD)
-VERSION:=$(shell cat VERSION)
-BUILD_TIME=$(shell date +'%Y-%m-%d_%T')
-LDFLAGS=-X main.revision=$(REVISON) -X main.buildTime=$(BUILD_TIME) -X main.version=$(VERSION)
-RELEASE_LDFLAGS=$(LDFLAGS) -s -w
+COMMIT:=$(shell git rev-parse --short HEAD)
+VERSION:=$(shell git describe --abbrev=0 --tags)
+DATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+LDFLAGS=-X main.commit=$(COMMIT) -X main.date=$(DATE) -X main.version=$(VERSION)
 
 .PHONY: all build clean test
 
@@ -13,18 +12,13 @@ build: test
 	go build -ldflags "$(LDFLAGS)"
 
 release: test
-	GOOS=linux go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/linux/$(OUTFILE)
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-linux.tgz --directory=build/linux $(OUTFILE)
-	GOOS=darwin go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/mac/$(OUTFILE)
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-mac.tgz --directory=build/mac $(OUTFILE)
-	GOOS=windows go build -ldflags "$(RELEASE_LDFLAGS)" -o ./build/win/$(OUTFILE).exe
-	tar czf ./build/$(OUTFILE)-v$(VERSION)-win.tgz --directory=build/win $(OUTFILE).exe
+	goreleaser release
 
 run:
 	go run main.go
 
 clean:
-	$(RM) $(OUTFILE) ./build/*/$(OUTFILE) ./build/*.tgz
+	$(RM) $(OUTFILE)
 
 test:
 	go test -v -cover ./...
