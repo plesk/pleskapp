@@ -2,7 +2,7 @@
 
 package json
 
-import "github.com/plesk/pleskapp/plesk/locales"
+import "github.com/plesk/pleskapp/plesk/internal/locales"
 
 type jsonError struct {
 	Code    int              `json:"code"`

@@ -5,9 +5,9 @@ package main
 import (
 	"fmt"
 	"github.com/plesk/pleskapp/plesk/cmd"
-	"github.com/plesk/pleskapp/plesk/config"
-	"github.com/plesk/pleskapp/plesk/locales"
-	"github.com/plesk/pleskapp/plesk/utils"
+	"github.com/plesk/pleskapp/plesk/internal/config"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
+	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"os"
 )
 

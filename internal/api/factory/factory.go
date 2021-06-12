@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/plesk/pleskapp/plesk/api"
-	"github.com/plesk/pleskapp/plesk/api/json"
-	"github.com/plesk/pleskapp/plesk/utils"
+	"github.com/plesk/pleskapp/plesk/internal/api"
+	"github.com/plesk/pleskapp/plesk/internal/api/json"
+	"github.com/plesk/pleskapp/plesk/internal/utils"
 )
 
 func buildClient(a api.Auth) *resty.Client {

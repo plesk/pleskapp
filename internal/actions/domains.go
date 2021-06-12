@@ -9,11 +9,11 @@ import (
 	"sort"
 	"text/tabwriter"
 
-	"github.com/plesk/pleskapp/plesk/api/factory"
-	"github.com/plesk/pleskapp/plesk/config"
-	"github.com/plesk/pleskapp/plesk/locales"
-	"github.com/plesk/pleskapp/plesk/types"
-	"github.com/plesk/pleskapp/plesk/utils"
+	"github.com/plesk/pleskapp/plesk/internal/api/factory"
+	"github.com/plesk/pleskapp/plesk/internal/config"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
+	"github.com/plesk/pleskapp/plesk/internal/types"
+	"github.com/plesk/pleskapp/plesk/internal/utils"
 )
 
 func validateIps(val types.ServerIPAddresses, comp types.ServerIPAddresses) (bool, bool) {

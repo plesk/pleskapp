@@ -3,9 +3,9 @@
 package cmd
 
 import (
-	"github.com/plesk/pleskapp/plesk/actions"
-	"github.com/plesk/pleskapp/plesk/config"
-	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/internal/actions"
+	"github.com/plesk/pleskapp/plesk/internal/config"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/spf13/cobra"
 )
 

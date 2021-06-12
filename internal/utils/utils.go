@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/plesk/pleskapp/plesk/types"
+	"github.com/plesk/pleskapp/plesk/internal/types"
 	"golang.org/x/term"
 )
 

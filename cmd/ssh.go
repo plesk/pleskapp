@@ -4,7 +4,7 @@ package cmd
 
 import (
 	serversCmd "github.com/plesk/pleskapp/plesk/cmd/servers"
-	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/spf13/cobra"
 )
 

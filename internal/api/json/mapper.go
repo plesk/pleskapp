@@ -5,8 +5,8 @@ package json
 import (
 	"errors"
 
-	"github.com/plesk/pleskapp/plesk/api"
-	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/internal/api"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 )
 
 func jsonDomainInfoToInfo(domains []domainInfo) []api.DomainInfo {

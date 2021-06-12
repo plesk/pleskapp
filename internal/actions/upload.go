@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/plesk/pleskapp/plesk/api/factory"
-	"github.com/plesk/pleskapp/plesk/types"
-	"github.com/plesk/pleskapp/plesk/upload"
-	"github.com/plesk/pleskapp/plesk/utils"
+	"github.com/plesk/pleskapp/plesk/internal/api/factory"
+	"github.com/plesk/pleskapp/plesk/internal/types"
+	"github.com/plesk/pleskapp/plesk/internal/upload"
+	"github.com/plesk/pleskapp/plesk/internal/utils"
 )
 
 func getPrereq(host types.Server, domain types.Domain) (*types.FtpUser, *string, *string, error) {

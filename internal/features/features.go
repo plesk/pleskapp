@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/plesk/pleskapp/plesk/locales"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 )
 
 type Feature string

@@ -2,7 +2,7 @@
 
 package api
 
-import "github.com/plesk/pleskapp/plesk/types"
+import "github.com/plesk/pleskapp/plesk/internal/types"
 
 type DomainManagement interface {
 	CreateDomain(domain string, ipAddresses types.ServerIPAddresses) (*DomainInfo, error)
