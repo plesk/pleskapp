@@ -28,7 +28,7 @@ var deployCmd = &cobra.Command{
 			return err
 		}
 
-		if 0 == len(server.Info.IP.IPv4) {
+		if len(server.Info.IP.IPv4) == 0 {
 			return errors.New("IPv4 address is required")
 		}
 		defaultIp := server.Info.IP.IPv4[0]
