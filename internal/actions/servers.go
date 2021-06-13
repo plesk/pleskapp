@@ -119,7 +119,7 @@ func ServerSSH(host types.Server) error {
 }
 
 func ServerList() error {
-	servers := config.GetServers()
+	servers := append([]types.Server{}, config.GetServers()...)
 	sort.Slice(servers, func(i, j int) bool { return servers[i].Host < servers[j].Host })
 
 	w := tabwriter.NewWriter(os.Stdout, 1, 1, 2, ' ', 0)
