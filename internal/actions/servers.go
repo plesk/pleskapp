@@ -89,8 +89,8 @@ func ServerAdd(host string, ignoreSsl bool) error {
 }
 
 func ServerLogin(host types.Server, generateOnly bool) error {
-	api := factory.GetAuthentication(host.GetServerAuth())
-	url, err := api.GetLoginLink(host.GetServerAuth())
+	apiAuth := factory.GetAuthentication(host.GetServerAuth())
+	url, err := apiAuth.GetLoginLink(host.GetServerAuth())
 	if err != nil {
 		return err
 	}
@@ -220,10 +220,10 @@ func ServerRemove(host types.Server) error {
 	for _, server := range removeServers {
 		fmt.Println("Removing server and its API key")
 
-		var auth types.ServerAuth = server.GetServerAuth()
-		var api api.Authentication = factory.GetAuthentication(auth)
+		auth := server.GetServerAuth()
+		apiAuth := factory.GetAuthentication(auth)
 
-		api.RemoveAPIKey(auth)
+		_, _ = apiAuth.RemoveAPIKey(auth)
 	}
 
 	config.SetServers(keepServers)
