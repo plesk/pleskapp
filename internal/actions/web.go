@@ -16,11 +16,16 @@ type Stack string
 const (
 	StackPHP     Stack = "PHP"
 	StackJS      Stack = "JavaScript"
+	StackRuby    Stack = "Ruby"
 	StackStatic  Stack = "static"
 	StackUnknown Stack = "unknown"
 )
 
 func DetectStack() Stack {
+	if fileExists("Gemfile") && fileExists("config.ru") {
+		return StackRuby
+	}
+
 	if fileExists("composer.json") {
 		return StackPHP
 	}
@@ -40,6 +45,8 @@ func RunServer(stack Stack) error {
 	port := defaultPort
 
 	switch stack {
+	case StackRuby:
+		return runRuby(port)
 	case StackPHP:
 		return runPHP(port)
 	case StackJS:
@@ -82,6 +89,10 @@ func runJS() error {
 	}
 
 	return runCommand("npm", "start")
+}
+
+func runRuby(port string) error {
+	return runCommand("bundle", "exec", "rackup", "--port", port)
 }
 
 func runStatic(port string) error {
