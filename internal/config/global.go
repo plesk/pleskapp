@@ -156,13 +156,13 @@ func SetServers(newData []types.Server) {
 	globalConfig.config.Server = newData
 }
 
-func SetDomains(host types.Server, newData []types.Domain) {
+func SetDomains(host *types.Server, newData []types.Domain) {
 	servers, _ := utils.FilterServers(GetServers(), host.Host)
 	host.Domains = newData
-	SetServers(append([]types.Server{host}, servers...))
+	SetServers(append([]types.Server{*host}, servers...))
 }
 
 func SetDomain(host types.Server, domain types.Domain) {
 	domains, _ := utils.FilterDomains(host.Domains, domain.Name)
-	SetDomains(host, append(domains, domain))
+	SetDomains(&host, append(domains, domain))
 }

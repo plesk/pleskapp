@@ -70,7 +70,7 @@ func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) er
 }
 
 func DomainList(host types.Server) error {
-	err := DomainReload(host)
+	err := DomainReload(&host)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func DomainList(host types.Server) error {
 	return w.Flush()
 }
 
-func DomainReload(host types.Server) error {
+func DomainReload(host *types.Server) error {
 	api := factory.GetDomainManagement(host.GetServerAuth())
 	domains, err := api.ListDomains()
 	if err != nil {

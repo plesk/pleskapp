@@ -20,7 +20,7 @@ var reloadCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		err = actions.DomainReload(*server)
+		err = actions.DomainReload(server)
 
 		if err == nil {
 			utils.Log.PrintL("domain.reload.success")
