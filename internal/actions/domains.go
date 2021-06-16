@@ -42,8 +42,8 @@ func validateIps(val types.ServerIPAddresses, comp types.ServerIPAddresses) (boo
 	return v4Valid, v6Valid
 }
 
-func DomainAdd(host types.Server, domain string, ipa types.ServerIPAddresses) error {
-	_, err := config.GetDomain(host, domain)
+func DomainAdd(host *types.Server, domain string, ipa types.ServerIPAddresses) error {
+	_, err := config.GetDomain(*host, domain)
 	if err == nil {
 		return errors.New(locales.L.Get("errors.domain.already.exists", domain))
 	}

@@ -41,13 +41,17 @@ var deployCmd = &cobra.Command{
 		domain, err = config.GetDomain(*server, domainName)
 		if err != nil {
 			fmt.Printf("Creating the domain %s...\n", domainName)
-			err = actions.DomainAdd(*server, domainName, types.ServerIPAddresses{
+			err = actions.DomainAdd(server, domainName, types.ServerIPAddresses{
 				IPv4: []string{defaultIp},
 			})
 			if err != nil {
 				return err
 			}
 			fmt.Println("Domain has been created.")
+			domain, err = config.GetDomain(*server, domainName)
+			if err != nil {
+				return err
+			}
 		} else {
 			fmt.Printf("Domain %s has been found.\n", domainName)
 		}

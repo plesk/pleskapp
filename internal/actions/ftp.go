@@ -31,7 +31,7 @@ func FtpUserCreate(host types.Server, domain types.Domain, user *types.FtpUser) 
 	}
 
 	domain.FTPUsers = append(domain.FTPUsers, *user)
-	config.SetDomain(host, domain)
+	config.SetDomain(&host, domain)
 
 	return user, nil
 }

@@ -49,7 +49,7 @@ func DatabaseAdd(host types.Server, domain types.Domain, dbs types.DatabaseServe
 		DatabaseServerID: newdb.DatabaseServerID,
 	})
 
-	config.SetDomain(host, domain)
+	config.SetDomain(&host, domain)
 	return nil
 }
 
@@ -95,7 +95,7 @@ func DatabaseDeploy(host types.Server, domain types.Domain, db types.Database, f
 		}
 
 		domain.DatabaseUsers = append(domain.DatabaseUsers, *dbu)
-		config.SetDomain(host, domain)
+		config.SetDomain(&host, domain)
 	}
 
 	var s *string

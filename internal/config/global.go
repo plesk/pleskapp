@@ -146,7 +146,7 @@ func DeleteDatabase(host types.Server, dbn string) {
 	}
 
 	if domain != nil {
-		SetDomain(host, *domain)
+		SetDomain(&host, *domain)
 	}
 }
 
@@ -162,7 +162,7 @@ func SetDomains(host *types.Server, newData []types.Domain) {
 	SetServers(append([]types.Server{*host}, servers...))
 }
 
-func SetDomain(host types.Server, domain types.Domain) {
+func SetDomain(host *types.Server, domain types.Domain) {
 	domains, _ := utils.FilterDomains(host.Domains, domain.Name)
-	SetDomains(&host, append(domains, domain))
+	SetDomains(host, append(domains, domain))
 }

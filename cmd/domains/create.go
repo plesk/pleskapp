@@ -41,7 +41,7 @@ var createCmd = &cobra.Command{
 		}
 
 		cmd.SilenceUsage = true
-		err = actions.DomainAdd(*server, args[1], ips)
+		err = actions.DomainAdd(server, args[1], ips)
 
 		if err == nil {
 			utils.Log.PrintL("domain.create.success", args[1])
