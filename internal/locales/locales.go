@@ -117,7 +117,7 @@ func init() {
 			"errors.stor.failed":               "Could not store file %s over FTP: %s",
 
 			"debug.mkdir.success": "Successfully created directory %s on server",
-			"debug.stor.success":  "Successfully stored file %s on server",
+			"debug.stor.success":  "Successfully stored local file %s to <remote>:%s",
 			"debug.cwd":           "Changing directory to %s",
 			"debug.dir.skip":      "Skipping directory %s that exists on target",
 			"debug.file.skip":     "Skipping file %s that exists on target (no overwrite specified)",

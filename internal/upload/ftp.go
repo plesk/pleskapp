@@ -5,6 +5,7 @@ package upload
 import (
 	"crypto/tls"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -134,15 +135,18 @@ func (c *ftpConnection) UploadFile(
 		return err
 	}
 
+	localFileName := filepath.Join(".", fileName)
+	remoteFileName := filepath.Join(serverRoot, basePath, baseName)
+
 	entry, err := c.findFile(serverRoot+basePath, baseName)
 	if entry != nil && err == nil {
 		if file.IsDir() && entry.Type == ftp.EntryTypeFolder {
-			utils.Log.Debug(locales.L.Get("debug.dir.skip", fileName))
+			utils.Log.Debug(locales.L.Get("debug.dir.skip", localFileName))
 			return nil
 		}
 
 		if !file.IsDir() && entry.Type == ftp.EntryTypeFile && !overwrite {
-			utils.Log.Debug(locales.L.Get("debug.file.skip", fileName))
+			utils.Log.Debug(locales.L.Get("debug.file.skip", localFileName))
 			return nil
 		}
 	}
@@ -151,9 +155,9 @@ func (c *ftpConnection) UploadFile(
 		err = c.inner.MakeDir(baseName)
 
 		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.mkdir.failed", clientRoot+baseName, err.Error()))
+			utils.Log.Error(locales.L.Get("errors.mkdir.failed", localFileName, err.Error()))
 		} else {
-			utils.Log.Debug(locales.L.Get("debug.mkdir.success", clientRoot+baseName))
+			utils.Log.Debug(locales.L.Get("debug.mkdir.success", localFileName))
 		}
 	} else {
 		file, err := os.Open(clientRoot + basePath + baseName)
@@ -163,9 +167,9 @@ func (c *ftpConnection) UploadFile(
 		err = c.inner.Stor(baseName, file)
 
 		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.stor.failed", clientRoot+baseName, err.Error()))
+			utils.Log.Error(locales.L.Get("errors.stor.failed", localFileName, err.Error()))
 		} else {
-			utils.Log.Print(locales.L.Get("debug.stor.success", clientRoot+baseName))
+			utils.Log.Print(locales.L.Get("debug.stor.success", localFileName, remoteFileName))
 		}
 	}
 
