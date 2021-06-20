@@ -3,6 +3,7 @@
 package actions
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -89,7 +90,8 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 	}
 
 	return filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
-		if info.IsDir() && (info.Name() == ".git" || info.Name() == ".idea") {
+		if info.IsDir() && strings.HasPrefix(info.Name(), ".") {
+			fmt.Println("Skip hidden directory:", info.Name())
 			return filepath.SkipDir
 		}
 
