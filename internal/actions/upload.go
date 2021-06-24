@@ -16,8 +16,8 @@ import (
 )
 
 func getPrereq(host types.Server, domain types.Domain) (*types.FtpUser, *string, *string, error) {
-	var fullpath string
-	var docroot string
+	var fullPath string
+	var docRoot string
 	// TODO: Ideally, there should be no need to do this
 	{
 		api := factory.GetDomainManagement(host.GetServerAuth())
@@ -26,9 +26,9 @@ func getPrereq(host types.Server, domain types.Domain) (*types.FtpUser, *string,
 			return nil, nil, nil, err
 		}
 
-		fullpath = i.WWWRoot
+		fullPath = i.WWWRoot
 		parts := strings.Split(i.WWWRoot, domain.Name)
-		docroot = parts[len(parts)-1]
+		docRoot = parts[len(parts)-1]
 	}
 
 	ftp := FindCachedFtpUser(domain)
@@ -40,7 +40,10 @@ func getPrereq(host types.Server, domain types.Domain) (*types.FtpUser, *string,
 		}
 	}
 
-	return ftp, &docroot, &fullpath, nil
+	// assume the parent directory as an app root directory
+	appRoot := filepath.Dir(docRoot)
+
+	return ftp, &appRoot, &fullPath, nil
 }
 
 func UploadFileToRoot(host types.Server, domain types.Domain, ovw bool, file string) (string, error) {
