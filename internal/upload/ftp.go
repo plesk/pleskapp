@@ -4,6 +4,7 @@ package upload
 
 import (
 	"crypto/tls"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -73,7 +74,7 @@ func Connect(creds types.FtpUser, server string, docRoot string) (*ftpConnection
 
 func (c *ftpConnection) Cwd(targetPath string) error {
 	if c.cwd != targetPath {
-		utils.Log.Debug(locales.L.Get("debug.cwd", targetPath))
+		log.Println(locales.L.Get("debug.cwd", targetPath))
 		err := c.inner.ChangeDir(targetPath)
 		if err != nil {
 			return err
@@ -141,12 +142,12 @@ func (c *ftpConnection) UploadFile(
 	entry, err := c.findFile(serverRoot+basePath, baseName)
 	if entry != nil && err == nil {
 		if file.IsDir() && entry.Type == ftp.EntryTypeFolder {
-			utils.Log.Debug(locales.L.Get("debug.dir.skip", localFileName))
+			log.Println(locales.L.Get("debug.dir.skip", localFileName))
 			return nil
 		}
 
 		if !file.IsDir() && entry.Type == ftp.EntryTypeFile && !overwrite {
-			utils.Log.Debug(locales.L.Get("debug.file.skip", localFileName))
+			log.Println(locales.L.Get("debug.file.skip", localFileName))
 			return nil
 		}
 	}
@@ -155,9 +156,9 @@ func (c *ftpConnection) UploadFile(
 		err = c.inner.MakeDir(baseName)
 
 		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.mkdir.failed", localFileName, err.Error()))
+			log.Println(locales.L.Get("errors.mkdir.failed", localFileName, err.Error()))
 		} else {
-			utils.Log.Debug(locales.L.Get("debug.mkdir.success", localFileName))
+			log.Println(locales.L.Get("debug.mkdir.success", localFileName))
 		}
 	} else {
 		file, err := os.Open(clientRoot + basePath + baseName)
@@ -167,9 +168,9 @@ func (c *ftpConnection) UploadFile(
 		err = c.inner.Stor(baseName, file)
 
 		if err != nil {
-			utils.Log.Error(locales.L.Get("errors.stor.failed", localFileName, err.Error()))
+			log.Println(locales.L.Get("errors.stor.failed", localFileName, err.Error()))
 		} else {
-			utils.Log.Print(locales.L.Get("debug.stor.success", localFileName, remoteFileName))
+			log.Println(locales.L.Get("debug.stor.success", localFileName, remoteFileName))
 		}
 	}
 

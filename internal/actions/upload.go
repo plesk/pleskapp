@@ -4,6 +4,7 @@ package actions
 
 import (
 	"fmt"
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"os"
 	"path"
 	"path/filepath"
@@ -104,7 +105,7 @@ func UploadDirectory(host types.Server, domain types.Domain, ovw bool, dry bool,
 		}
 
 		if dry {
-			utils.Log.PrintL("upload.dry.run.upload", path.Join(dir, pathPart), path.Join(*serverPath, pathPart))
+			fmt.Println(locales.L.Get("upload.dry.run.upload", path.Join(dir, pathPart), path.Join(*serverPath, pathPart)))
 			return nil
 		}
 

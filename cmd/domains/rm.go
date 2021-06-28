@@ -3,11 +3,12 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 var deleteCmd = &cobra.Command{
@@ -24,21 +25,21 @@ var deleteCmd = &cobra.Command{
 			if i > 0 {
 				domain, err := config.GetDomain(*server, d)
 				if err != nil {
-					utils.Log.Error(err.Error())
+					log.Println(err.Error())
 					continue
 				}
 
 				err = actions.DomainDelete(*server, *domain)
 				if err != nil {
 					lastErr = err
-					utils.Log.Error(err.Error())
+					log.Println(err.Error())
 				}
 			}
 		}
 
 		cmd.SilenceUsage = true
 		if lastErr == nil {
-			utils.Log.PrintL("domain.delete.success")
+			fmt.Println(locales.L.Get("domain.delete.success"))
 		}
 
 		return lastErr

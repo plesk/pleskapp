@@ -3,10 +3,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +24,7 @@ var reauthCmd = &cobra.Command{
 		err = actions.ServerReauth(*server)
 
 		if err == nil {
-			utils.Log.PrintL("server.reauth.success")
+			fmt.Println(locales.L.Get("server.reauth.success"))
 		}
 
 		return err

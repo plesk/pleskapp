@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/config"
-
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/spf13/cobra"
 )

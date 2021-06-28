@@ -3,10 +3,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -17,15 +17,15 @@ var deleteCmd = &cobra.Command{
 		for _, host := range args {
 			server, err := config.GetServer(host)
 			if err != nil {
-				utils.Log.Error(err.Error())
+				fmt.Println(err.Error())
 				continue
 			}
 
 			err = actions.ServerRemove(*server)
 			if err != nil {
-				utils.Log.Error(locales.L.Get("errors.server.remove.failure", host, err.Error()))
+				fmt.Println(locales.L.Get("errors.server.remove.failure", host, err.Error()))
 			} else {
-				utils.Log.PrintL("server.delete.success")
+				fmt.Println("server.delete.success")
 			}
 		}
 	},

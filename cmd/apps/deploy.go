@@ -5,6 +5,7 @@ package cmd
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,7 +14,6 @@ import (
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +66,7 @@ var deployCmd = &cobra.Command{
 		cmd.SilenceUsage = true
 		err = actions.AppDeploy(*server, c, path, *domain)
 		if err == nil {
-			utils.Log.PrintL("app.deploy.success", path)
+			fmt.Println(locales.L.Get("app.deploy.success", path))
 		}
 
 		return err

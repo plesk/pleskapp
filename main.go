@@ -7,7 +7,6 @@ import (
 	"github.com/plesk/pleskapp/plesk/cmd"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"os"
 )
 
@@ -45,7 +44,7 @@ func main() {
 	exitCode := 0
 	err = cmd.Execute()
 	if err != nil {
-		utils.Log.Error(locales.L.Get("errors.execution.failed.generic", err.Error()))
+		fmt.Println(locales.L.Get("errors.execution.failed.generic", err.Error()))
 		exitCode = 1
 	}
 

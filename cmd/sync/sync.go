@@ -3,13 +3,13 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -40,14 +40,14 @@ var SyncCmd = &cobra.Command{
 			path, err := filepath.Abs(p)
 			if err != nil {
 				lastErr = err
-				utils.Log.Error(locales.L.Get("errors.abspath.failed", p, err.Error()))
+				fmt.Println(locales.L.Get("errors.abspath.failed", p, err.Error()))
 				continue
 			}
 
 			s, err := os.Stat(path)
 			if err != nil {
 				lastErr = err
-				utils.Log.Error(locales.L.Get("errors.stat.failed", path, err.Error()))
+				fmt.Println(locales.L.Get("errors.stat.failed", path, err.Error()))
 				continue
 			}
 
@@ -55,14 +55,14 @@ var SyncCmd = &cobra.Command{
 				err = actions.UploadDirectory(*server, *domain, overwrite, dry, path, nil)
 				if err != nil {
 					lastErr = err
-					utils.Log.Error(locales.L.Get("errors.upload.failed", path, err.Error()))
+					fmt.Println(locales.L.Get("errors.upload.failed", path, err.Error()))
 				}
 			} else {
 				if !dry {
 					err = actions.UploadFile(*server, *domain, overwrite, path)
 					if err != nil {
 						lastErr = err
-						utils.Log.Error(locales.L.Get("errors.upload.failed", path, err.Error()))
+						fmt.Println(locales.L.Get("errors.upload.failed", path, err.Error()))
 					}
 				}
 			}
@@ -70,7 +70,7 @@ var SyncCmd = &cobra.Command{
 
 		cmd.SilenceUsage = true
 		if lastErr == nil {
-			utils.Log.PrintL("files.upload.success")
+			fmt.Println(locales.L.Get("files.upload.success"))
 		}
 
 		return err

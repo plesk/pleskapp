@@ -3,13 +3,13 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +44,7 @@ var createCmd = &cobra.Command{
 		err = actions.DomainAdd(server, args[1], ips)
 
 		if err == nil {
-			utils.Log.PrintL("domain.create.success", args[1])
+			fmt.Println(locales.L.Get("domain.create.success", args[1]))
 		}
 
 		return err

@@ -8,9 +8,9 @@ import (
 	domainsCmd "github.com/plesk/pleskapp/plesk/cmd/domains"
 	serversCmd "github.com/plesk/pleskapp/plesk/cmd/servers"
 	syncCmd "github.com/plesk/pleskapp/plesk/cmd/sync"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
-
 	"github.com/spf13/cobra"
+	"io/ioutil"
+	"log"
 )
 
 var rootCmd = &cobra.Command{
@@ -45,8 +45,10 @@ func init() {
 }
 
 func initLogger() {
+	log.SetFlags(0)
+
 	v, _ := rootCmd.PersistentFlags().GetBool("verbose")
-	if v {
-		utils.Log.SetLevel(2)
+	if !v {
+		log.SetOutput(ioutil.Discard)
 	}
 }

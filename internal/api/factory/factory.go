@@ -4,12 +4,13 @@ package factory
 
 import (
 	"crypto/tls"
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/plesk/pleskapp/plesk/internal/api"
 	"github.com/plesk/pleskapp/plesk/internal/api/json"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 )
 
 func buildClient(a api.Auth) *resty.Client {
@@ -25,7 +26,7 @@ func buildClient(a api.Auth) *resty.Client {
 	r := resty.NewWithClient(c).
 		SetHostURL("https://"+a.GetAddress()+":"+a.GetPort()).
 		SetHeader("Content-Type", "application/json").
-		SetDebug(utils.Log.HasDebug())
+		SetDebug(log.Writer() != ioutil.Discard)
 
 	login := a.GetLogin()
 	pass := a.GetPassword()

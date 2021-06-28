@@ -3,10 +3,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ var reloadCmd = &cobra.Command{
 		err = actions.ServerUpdate(*server)
 
 		if err == nil {
-			utils.Log.PrintL("server.reload.success")
+			fmt.Println(locales.L.Get("server.reload.success"))
 		}
 
 		return err

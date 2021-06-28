@@ -4,12 +4,12 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ var createCmd = &cobra.Command{
 		err = actions.DatabaseAdd(*server, *domain, *dbs, db)
 
 		if err == nil {
-			utils.Log.PrintL("database.create.success", db.Name)
+			fmt.Println(locales.L.Get("database.create.success", db.Name))
 		}
 
 		return err

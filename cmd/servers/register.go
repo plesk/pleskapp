@@ -3,10 +3,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ var registerCmd = &cobra.Command{
 		cmd.SilenceUsage = true
 
 		if err == nil {
-			utils.Log.PrintL("server.register.success")
+			fmt.Println(locales.L.Get("server.register.success"))
 		}
 
 		return err

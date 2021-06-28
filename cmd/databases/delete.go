@@ -3,10 +3,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ var deleteCmd = &cobra.Command{
 		err = actions.DatabaseDelete(*server, args[1])
 
 		if err == nil {
-			utils.Log.PrintL("database.delete.success", args[1])
+			fmt.Println(locales.L.Get("database.delete.success", args[1]))
 		}
 
 		return err

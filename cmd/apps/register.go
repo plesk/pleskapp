@@ -4,13 +4,13 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/features"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ var registerCmd = &cobra.Command{
 			if k != nil {
 				kFeat = append(kFeat, f)
 			} else {
-				utils.Log.Error(locales.L.Get("app.register.flag.feature.unknown", f))
+				fmt.Println(locales.L.Get("app.register.flag.feature.unknown", f))
 			}
 		}
 
@@ -53,7 +53,7 @@ var registerCmd = &cobra.Command{
 		err = actions.AppAdd(*server, *domain, kFeat, sPath, path, overwrite)
 
 		if err == nil {
-			utils.Log.PrintL("app.register.success", path)
+			fmt.Println(locales.L.Get("app.register.success", path))
 		}
 
 		return err

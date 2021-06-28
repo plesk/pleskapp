@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/plesk/pleskapp/plesk/internal/api/factory"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"github.com/plesk/pleskapp/plesk/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ var uploadCmd = &cobra.Command{
 		err = actions.DatabaseDeploy(*server, *domain, *db, path+"/"+fp[len(fp)-1])
 
 		if err == nil {
-			utils.Log.PrintL("database.deploy.success", db.Name, args[3])
+			fmt.Println(locales.L.Get("database.deploy.success", db.Name, args[3]))
 		}
 
 		return err
