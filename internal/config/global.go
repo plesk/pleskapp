@@ -1,4 +1,4 @@
-// Copyright 1999-2021. Plesk International GmbH.
+// Copyright 1999-2022. Plesk International GmbH.
 
 package config
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright 1999-2022. Plesk International GmbH.
 
 PREFIX=/usr/local/bin/
 
@@ -26,4 +27,3 @@ else
   echo "Unsupported OS."
   exit 1
 fi
-

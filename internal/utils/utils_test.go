@@ -1,3 +1,5 @@
+// Copyright 1999-2022. Plesk International GmbH.
+
 package utils
 
 import (
