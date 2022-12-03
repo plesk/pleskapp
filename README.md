@@ -41,7 +41,7 @@ environment variable. To test it one can use the following command:
 plesk version
 ```
 
-Alternative way if you have Go 1.16+ installed:
+Alternative way if you have Go 1.19+ installed:
 
 ```
 go install github.com/plesk/pleskapp/plesk
@@ -56,4 +56,3 @@ There is a Makefile with bunch of targets. One can use the following command to 
 ```
 make
 ```
-
