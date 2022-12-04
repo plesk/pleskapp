@@ -261,7 +261,7 @@ func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDat
 		SetBody(req).
 		SetResult(&databaseUserInfo{}).
 		SetError(&jsonError{}).
-		Post("/api/v2/dbusers/")
+		Post("/api/v2/dbusers")
 
 	if err != nil {
 		return nil, err

@@ -257,7 +257,7 @@ func (j jsonDomains) ListDomains() ([]api.DomainInfo, error) {
 	res, err := j.client.R().
 		SetResult([]domainInfo{}).
 		SetError(&jsonError{}).
-		Get("/api/v2/domains/")
+		Get("/api/v2/domains")
 
 	if err != nil {
 		return []api.DomainInfo{}, err
