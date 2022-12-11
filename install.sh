@@ -26,7 +26,7 @@ if [ "Linux" = "$OS_NAME" -o "Darwin" = "$OS_NAME" ]; then
     curl -fsSL "$MAC_ARCHIVE" --output plesk-latest.tar.gz
   fi
 
-  tar xzf plesk-latest.tar.gz --directory=$PREFIX
+  tar xzf plesk-latest.tar.gz --directory=$PREFIX plesk
   rm plesk-latest.tar.gz
   [ -f $PREFIX/plesk ] && echo "The utility 'plesk' has been successfully installed to $PREFIX"
 else
