@@ -163,6 +163,8 @@ func ServerUpdate(host types.Server) error {
 	host.Info.IP = *ipAddr
 	host.Info.IsWindows = info.IsWindows
 	host.Info.Version = info.Version
+	host.Info.Revision = info.Revision
+	host.Info.BuildDate = info.BuildDate
 	host.DatabaseServers = *dbs
 	host.UpdatedAt = time.Now()
 

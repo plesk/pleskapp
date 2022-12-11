@@ -49,10 +49,12 @@ func (j jsonInfo) GetInfo() (api.ServerInfo, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *serverInfo = res.Result().(*serverInfo)
+		r := res.Result().(*serverInfo)
 		return api.ServerInfo{
 			IsWindows: r.Platform == "Windows",
 			Version:   r.PanelVersion + "." + r.PanelUpdateVersion,
+			Revision:  r.PanelRevision,
+			BuildDate: r.PanelBuildDate,
 		}, nil
 	}
 

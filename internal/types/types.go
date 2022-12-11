@@ -49,6 +49,8 @@ func (s Server) GetDatabaseServerByType(dbt string) *DatabaseServer {
 type ServerInfo struct {
 	IsWindows bool              `json:"is_windows"`
 	Version   string            `json:"version"`
+	Revision  string            `json:"revision"`
+	BuildDate string            `json:"build_date"`
 	IP        ServerIPAddresses `json:"addresses"`
 }
 

@@ -26,10 +26,18 @@ var versionCmd = &cobra.Command{
 		defaultServerName, err := config.DefaultServer()
 		if err == nil {
 			server, _ := config.GetServer(defaultServerName)
+			platform := "Linux"
+			if server.Info.IsWindows {
+				platform = "Windows"
+			}
+
 			fmt.Println()
 			fmt.Println("Server information")
 			fmt.Printf("Host:   \t%s\n", server.Host)
+			fmt.Printf("Platform:\t%s\n", platform)
 			fmt.Printf("Version:\t%s\n", server.Info.Version)
+			fmt.Printf("Revision:\t%s\n", server.Info.Revision)
+			fmt.Printf("Build date:\t%s\n", server.Info.BuildDate)
 		}
 
 		return nil

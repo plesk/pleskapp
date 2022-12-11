@@ -89,6 +89,8 @@ type Server interface {
 type ServerInfo struct {
 	IsWindows bool
 	Version   string
+	Revision  string
+	BuildDate string
 }
 
 type AuthClient interface {
