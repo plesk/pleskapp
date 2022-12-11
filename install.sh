@@ -1,6 +1,8 @@
 #!/bin/bash
 # Copyright 1999-2022. Plesk International GmbH.
 
+set -e
+
 PREFIX=/usr/local/bin/
 
 BIN_URLS=$(curl -fsSL https://api.github.com/repos/plesk/pleskapp/releases/latest | grep browser_download_url | cut -d '"' -f 4)
