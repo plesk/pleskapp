@@ -5,20 +5,22 @@ module github.com/plesk/pleskapp/plesk
 go 1.19
 
 require (
-	github.com/go-resty/resty/v2 v2.6.0
-	github.com/jlaffaye/ftp v0.0.0-20210307004419-5d4190119067
-	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
-	github.com/spf13/cobra v1.1.3
-	github.com/stretchr/testify v1.7.0
-	golang.org/x/term v0.0.0-20210503060354-a79de5458b56
+	github.com/go-resty/resty/v2 v2.7.0
+	github.com/jlaffaye/ftp v0.1.0
+	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
+	github.com/spf13/cobra v1.6.1
+	github.com/stretchr/testify v1.8.0
+	golang.org/x/term v0.3.0
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/net v0.0.0-20210505214959-0714010a04ed // indirect
-	golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+	golang.org/x/net v0.4.0 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
