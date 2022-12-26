@@ -89,6 +89,7 @@ func init() {
 			"server.login.success":            "Generated login link: %s",
 			"server.login.generate.flag":      "Only generate the link (without autologin attempt)",
 			"server.ssh.description":          "Login to server using SSH",
+			"server.ssh.flag.command":         "Command to execute",
 
 			"errors.server.remove.failure":     "Could not remove server %s: %s",
 			"errors.feature.not.supported":     "Feature %s is not supported on Windows",

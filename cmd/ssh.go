@@ -14,5 +14,8 @@ var sshCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return serversCmd.SSHCmd.RunE(cmd, args)
 	},
-	Args: cobra.MaximumNArgs(1),
+}
+
+func init() {
+	sshCmd.Flags().StringP("command", "c", "", locales.L.Get("server.ssh.flag.command"))
 }

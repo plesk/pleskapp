@@ -108,10 +108,14 @@ func ServerLogin(host types.Server, generateOnly bool) error {
 	return nil
 }
 
-func ServerSSH(host types.Server) error {
-	fmt.Printf("Login to %s using SSH...\n", host.Host)
+func ServerSSH(host types.Server, additionalCommand string) error {
+	if additionalCommand == "" {
+		fmt.Printf("Login to %s using SSH...\n", host.Host)
+	} else {
+		fmt.Printf("Attempt to execute '%s' at %s via SSH...\n", additionalCommand, host.Host)
+	}
 
-	cmd := exec.Command("ssh", host.Host)
+	cmd := exec.Command("ssh", host.Host, additionalCommand)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

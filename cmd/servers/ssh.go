@@ -13,6 +13,7 @@ var SSHCmd = &cobra.Command{
 	Use:   "ssh [SERVER]",
 	Short: locales.L.Get("server.ssh.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		additionalCommand, _ := cmd.Flags().GetString("command")
 		cmd.SilenceUsage = true
 
 		server, err := config.GetServerByArgs(args)
@@ -20,11 +21,12 @@ var SSHCmd = &cobra.Command{
 			return err
 		}
 
-		return actions.ServerSSH(*server)
+		return actions.ServerSSH(*server, additionalCommand)
 	},
-	Args: cobra.MaximumNArgs(1),
 }
 
 func init() {
+	SSHCmd.Flags().StringP("command", "c", "", locales.L.Get("server.ssh.flag.command"))
+
 	ServersCmd.AddCommand(SSHCmd)
 }
