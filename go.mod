@@ -9,7 +9,7 @@ require (
 	github.com/jlaffaye/ftp v0.2.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/spf13/cobra v1.7.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	golang.org/x/term v0.11.0
 )
 
