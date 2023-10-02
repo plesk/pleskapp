@@ -5,7 +5,7 @@ module github.com/plesk/pleskapp/plesk
 go 1.21
 
 require (
-	github.com/go-resty/resty/v2 v2.8.0
+	github.com/go-resty/resty/v2 v2.9.1
 	github.com/jlaffaye/ftp v0.2.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/spf13/cobra v1.7.0
