@@ -21,7 +21,7 @@ var SSHCmd = &cobra.Command{
 			return err
 		}
 
-		return actions.ServerSSH(*server, additionalCommand)
+		return actions.ServerSSH(*server, additionalCommand, false)
 	},
 }
 

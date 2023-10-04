@@ -3,14 +3,15 @@
 package cmd
 
 import (
+	"io/ioutil"
+	"log"
+
 	appsCmd "github.com/plesk/pleskapp/plesk/cmd/apps"
 	databasesCmd "github.com/plesk/pleskapp/plesk/cmd/databases"
 	domainsCmd "github.com/plesk/pleskapp/plesk/cmd/domains"
 	serversCmd "github.com/plesk/pleskapp/plesk/cmd/servers"
 	syncCmd "github.com/plesk/pleskapp/plesk/cmd/sync"
 	"github.com/spf13/cobra"
-	"io/ioutil"
-	"log"
 )
 
 var rootCmd = &cobra.Command{
@@ -30,6 +31,7 @@ func Execute() error {
 		contextCmd,
 		loginCmd,
 		sshCmd,
+		dbCmd,
 		webCmd,
 		completionCmd,
 		pleskCmd,
