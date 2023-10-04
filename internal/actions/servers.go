@@ -4,13 +4,13 @@ package actions
 
 import (
 	"fmt"
-	"github.com/pkg/browser"
 	"os"
 	"os/exec"
 	"sort"
 	"text/tabwriter"
 	"time"
 
+	"github.com/pkg/browser"
 	"github.com/plesk/pleskapp/plesk/internal/api"
 	"github.com/plesk/pleskapp/plesk/internal/api/factory"
 	"github.com/plesk/pleskapp/plesk/internal/config"
@@ -108,14 +108,19 @@ func ServerLogin(host types.Server, generateOnly bool) error {
 	return nil
 }
 
-func ServerSSH(host types.Server, additionalCommand string) error {
+func ServerSSH(host types.Server, additionalCommand string, interactiveMode bool) error {
 	if additionalCommand == "" {
 		fmt.Printf("Login to %s using SSH...\n", host.Host)
 	} else {
 		fmt.Printf("Attempt to execute '%s' at %s via SSH...\n", additionalCommand, host.Host)
 	}
 
-	cmd := exec.Command("ssh", host.Host, additionalCommand)
+	args := []string{host.Host, additionalCommand}
+	if interactiveMode {
+		args = append([]string{"-t"}, args...)
+	}
+
+	cmd := exec.Command("ssh", args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

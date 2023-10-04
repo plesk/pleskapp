@@ -9,24 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var SSHCmd = &cobra.Command{
-	Use:   "ssh [SERVER]",
-	Short: locales.L.Get("server.ssh.description"),
+var dbCmd = &cobra.Command{
+	Use:   "db [SERVER]",
+	Short: locales.L.Get("server.db.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		additionalCommand, _ := cmd.Flags().GetString("command")
-		cmd.SilenceUsage = true
-
 		server, err := config.GetServerByArgs(args)
 		if err != nil {
 			return err
 		}
 
-		return actions.ServerSSH(*server, additionalCommand, false)
+		return actions.ServerSSH(*server, "plesk db", true)
 	},
-}
-
-func init() {
-	SSHCmd.Flags().StringP("command", "c", "", locales.L.Get("server.ssh.flag.command"))
-
-	ServersCmd.AddCommand(SSHCmd)
 }
