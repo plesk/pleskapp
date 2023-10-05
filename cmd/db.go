@@ -18,6 +18,11 @@ var dbCmd = &cobra.Command{
 			return err
 		}
 
-		return actions.ServerSSH(*server, "sudo plesk db", true)
+		additionalCommand := "sudo plesk db"
+		if server.Info.IsWindows {
+			additionalCommand = "plesk db"
+		}
+
+		return actions.ServerSSH(*server, additionalCommand, true)
 	},
 }
