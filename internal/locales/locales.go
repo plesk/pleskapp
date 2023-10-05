@@ -90,7 +90,7 @@ func init() {
 			"server.login.generate.flag":      "Only generate the link (without autologin attempt)",
 			"server.ssh.description":          "Login to server using SSH",
 			"server.ssh.flag.command":         "Command to execute",
-			"server.db.description":           "Run Plesk Database Shell using SSH",
+			"server.db.description":           "Run interactive Plesk database shell",
 
 			"errors.server.remove.failure":     "Could not remove server %s: %s",
 			"errors.feature.not.supported":     "Feature %s is not supported on Windows",

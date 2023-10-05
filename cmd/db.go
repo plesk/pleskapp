@@ -18,6 +18,6 @@ var dbCmd = &cobra.Command{
 			return err
 		}
 
-		return actions.ServerSSH(*server, "plesk db", true)
+		return actions.ServerSSH(*server, "sudo plesk db", true)
 	},
 }
