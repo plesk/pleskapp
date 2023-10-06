@@ -22,6 +22,6 @@ clean:
 	$(RM) $(OUTFILE)
 
 test:
-	go test -v -cover ./...
+	go test -coverprofile=coverage.txt -covermode=atomic -v ./...
 
 all: clean release build
