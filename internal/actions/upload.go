@@ -59,7 +59,7 @@ func UploadFileToRoot(host types.Server, domain types.Domain, ovw bool, file str
 	}
 
 	cr, f := utils.GetClientRootName(file)
-	return strings.Split(*path, *docroot)[0], connection.UploadFile(cr, "/", f, true, host.Info.IsWindows)
+	return strings.Split(*path, *docroot)[0], connection.UploadFile(cr, "/", f, ovw, host.Info.IsWindows)
 }
 
 func UploadFile(host types.Server, domain types.Domain, ovw bool, file string) error {
