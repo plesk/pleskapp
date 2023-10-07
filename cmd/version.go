@@ -21,7 +21,9 @@ var versionCmd = &cobra.Command{
 	Short: locales.L.Get("version.description"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Client information")
-		fmt.Printf("Version:\t%s\nRevision:\t%s\nBuild time:\t%s\n", Version, Commit, BuildTime)
+		fmt.Printf("Version:\t%s\n", Version)
+		fmt.Printf("Revision:\t%s\n", Commit)
+		fmt.Printf("Build time:\t%s\n", BuildTime)
 
 		defaultServerName, err := config.DefaultServer()
 		if err == nil {
