@@ -4,13 +4,11 @@ package utils
 
 import (
 	"fmt"
+	"github.com/plesk/pleskapp/plesk/internal/types"
+	"golang.org/x/term"
 	"math/rand"
 	"strings"
 	"syscall"
-	"time"
-
-	"github.com/plesk/pleskapp/plesk/internal/types"
-	"golang.org/x/term"
 )
 
 const allowedChars = "abcdefghijklmnopqrstuvwxyz"
@@ -68,7 +66,6 @@ func GeneratePassword(length int) string {
 		strings.Split("!@#$%^*()-=+_", ""),
 	}
 
-	rand.Seed(time.Now().UnixNano())
 	pw := ""
 	for i := 0; i < length; i++ {
 		pw += charsets[i%3][rand.Intn(len(charsets[i%3]))]
@@ -83,7 +80,6 @@ func GeneratePassword(length int) string {
 func GenerateUsername(length int) string {
 	var charset = strings.Split(allowedChars, "")
 
-	rand.Seed(time.Now().UnixNano())
 	pw := ""
 	for i := 0; i < length; i++ {
 		pw += charset[rand.Intn(len(charset))]

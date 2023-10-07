@@ -58,7 +58,7 @@ func (j jsonFTPUsers) ListDomainFtpUsers(domain string, user types.FtpUser) ([]a
 	}
 
 	if res.StatusCode() == 403 {
-		return nil, authError{server: j.client.HostURL, needReauth: true}
+		return nil, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -105,7 +105,7 @@ func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTP
 	}
 
 	if res.StatusCode() == 403 {
-		return nil, authError{server: j.client.HostURL, needReauth: true}
+		return nil, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -140,7 +140,7 @@ func (j jsonFTPUsers) UpdateFtpUser(domain string, user string, userNew types.Ft
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -157,7 +157,7 @@ func (j jsonFTPUsers) DeleteFtpUser(domain string, user types.FtpUser) error {
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	if res.IsError() {

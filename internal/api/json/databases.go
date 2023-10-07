@@ -52,7 +52,7 @@ func (j jsonDatabases) ListDatabases() ([]api.DatabaseInfo, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -76,7 +76,7 @@ func (j jsonDatabases) ListDomainDatabases(domain string) ([]api.DatabaseInfo, e
 	}
 
 	if res.StatusCode() == 403 {
-		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
+		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -119,7 +119,7 @@ func (j jsonDatabases) CreateDatabase(domain types.Domain, db types.NewDatabase,
 	}
 
 	if res.StatusCode() == 403 {
-		return nil, authError{server: j.client.HostURL, needReauth: true}
+		return nil, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -136,7 +136,7 @@ func (j jsonDatabases) RemoveDatabase(db types.Database) error {
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	if res.IsError() {
@@ -216,7 +216,7 @@ func (j jsonDatabases) DeployDatabase(
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -239,7 +239,7 @@ func (j jsonDatabases) ListDatabaseServers() ([]api.DatabaseServerInfo, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return []api.DatabaseServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
+		return []api.DatabaseServerInfo{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -277,7 +277,7 @@ func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDat
 	}
 
 	if res.StatusCode() == 403 {
-		return nil, authError{server: j.client.HostURL, needReauth: true}
+		return nil, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -294,7 +294,7 @@ func (j jsonDatabases) RemoveDatabaseUser(dbu types.DatabaseUser) error {
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	if res.IsError() {
@@ -322,7 +322,7 @@ func (j jsonDatabases) ListDatabaseUsers(db types.Database) ([]api.DatabaseUserI
 	}
 
 	if res.StatusCode() == 403 {
-		return []api.DatabaseUserInfo{}, authError{server: j.client.HostURL, needReauth: true}
+		return []api.DatabaseUserInfo{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)

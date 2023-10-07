@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -43,7 +42,7 @@ var deployCmd = &cobra.Command{
 		}
 
 		var c types.App
-		f, err := ioutil.ReadFile(path + "/.plesk")
+		f, err := os.ReadFile(path + "/.plesk")
 		if err != nil {
 			return errors.New(locales.L.Get("errors.cannot.parse.config", path+"/.plesk"))
 		}

@@ -85,7 +85,7 @@ func (j jsonDomains) getDomainSysUser(d string) (string, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.HostURL, needReauth: true}
+		return "", authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -134,7 +134,7 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 	}
 
 	if res.StatusCode() == 403 {
-		return nil, authError{server: j.client.HostURL, needReauth: true}
+		return nil, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -175,7 +175,7 @@ func (j jsonDomains) AddDomainFeatures(domain string, featureList []string, isWi
 			}
 
 			if res.StatusCode() == 403 {
-				return authError{server: j.client.HostURL, needReauth: true}
+				return authError{server: j.client.BaseURL, needReauth: true}
 			}
 
 			var r = res.Error().(*jsonError)
@@ -220,7 +220,7 @@ func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
+		return api.DomainInfo{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -242,7 +242,7 @@ func (j jsonDomains) RemoveDomain(d string) error {
 	}
 
 	if res.StatusCode() == 403 {
-		return authError{server: j.client.HostURL, needReauth: true}
+		return authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	if res.IsError() {
@@ -269,7 +269,7 @@ func (j jsonDomains) ListDomains() ([]api.DomainInfo, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return []api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
+		return []api.DomainInfo{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)

@@ -64,7 +64,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 		}
 
 		if res.StatusCode() == 403 {
-			return "", authError{server: j.client.HostURL, needReauth: false}
+			return "", authError{server: j.client.BaseURL, needReauth: false}
 		}
 
 		var r = res.Error().(*jsonError)
@@ -104,7 +104,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.HostURL, needReauth: false}
+		return "", authError{server: j.client.BaseURL, needReauth: false}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -143,7 +143,7 @@ func (j Auth) GetLoginLink(auth api.Auth) (string, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.HostURL, needReauth: true}
+		return "", authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)

@@ -4,7 +4,7 @@ package factory
 
 import (
 	"crypto/tls"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -24,9 +24,9 @@ func buildClient(a api.Auth) *resty.Client {
 	}
 
 	r := resty.NewWithClient(c).
-		SetHostURL("https://"+a.GetAddress()+":"+a.GetPort()).
+		SetBaseURL("https://"+a.GetAddress()+":"+a.GetPort()).
 		SetHeader("Content-Type", "application/json").
-		SetDebug(log.Writer() != ioutil.Discard)
+		SetDebug(log.Writer() != io.Discard)
 
 	login := a.GetLogin()
 	pass := a.GetPassword()

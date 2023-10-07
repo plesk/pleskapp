@@ -59,7 +59,7 @@ func (j jsonInfo) GetInfo() (api.ServerInfo, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return api.ServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
+		return api.ServerInfo{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)
@@ -95,7 +95,7 @@ func (j jsonInfo) GetIPAddresses() (types.ServerIPAddresses, error) {
 	}
 
 	if res.StatusCode() == 403 {
-		return types.ServerIPAddresses{}, authError{server: j.client.HostURL, needReauth: true}
+		return types.ServerIPAddresses{}, authError{server: j.client.BaseURL, needReauth: true}
 	}
 
 	var r = res.Error().(*jsonError)

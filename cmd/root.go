@@ -3,7 +3,7 @@
 package cmd
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 
 	appsCmd "github.com/plesk/pleskapp/plesk/cmd/apps"
@@ -51,6 +51,6 @@ func initLogger() {
 
 	v, _ := rootCmd.PersistentFlags().GetBool("verbose")
 	if !v {
-		log.SetOutput(ioutil.Discard)
+		log.SetOutput(io.Discard)
 	}
 }

@@ -5,7 +5,6 @@ package actions
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 
 	"github.com/plesk/pleskapp/plesk/internal/api/factory"
@@ -48,7 +47,7 @@ func AppAdd(
 		return err
 	}
 
-	ioutil.WriteFile(path+"/.plesk", aj, 0600)
+	os.WriteFile(path+"/.plesk", aj, 0600)
 
 	return nil
 }
