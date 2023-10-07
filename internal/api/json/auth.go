@@ -32,7 +32,7 @@ func NewAuth(c *resty.Client) Auth {
 	}
 }
 
-//GetAPIKey gets API keys via REST CLI Gate
+// GetAPIKey gets API keys via REST CLI Gate
 func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 	// FIXME: Enable direct call when 18.0.25-18.0.28 are no longer used:
 	//  https://jira.plesk.ru/browse/PPP-49425
@@ -59,7 +59,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 		}
 
 		if res.IsSuccess() {
-			var r *createAPIKeyResponse = res.Result().(*createAPIKeyResponse)
+			var r = res.Result().(*createAPIKeyResponse)
 			return r.Key, nil
 		}
 
@@ -67,7 +67,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 			return "", authError{server: j.client.HostURL, needReauth: false}
 		}
 
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return "", errors.New(locales.L.Get("api.errors.auth.cli.failed", r.Code, r.Message))
 	}
 
@@ -95,7 +95,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		var r = res.Result().(*cliGateResponce)
 		if r.Code == 0 {
 			return r.Stdout, nil
 		}
@@ -107,7 +107,7 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 		return "", authError{server: j.client.HostURL, needReauth: false}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return "", jsonErrorToError(*r)
 }
 
@@ -134,7 +134,7 @@ func (j Auth) GetLoginLink(auth api.Auth) (string, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		var r = res.Result().(*cliGateResponce)
 		if r.Code == 0 {
 			return r.Stdout, nil
 		}
@@ -146,7 +146,7 @@ func (j Auth) GetLoginLink(auth api.Auth) (string, error) {
 		return "", authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return "", jsonErrorToError(*r)
 }
 
@@ -162,7 +162,7 @@ func (j Auth) RemoveAPIKey(auth api.Auth) (string, error) {
 	}
 
 	if res.IsError() {
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return "", jsonErrorToError(*r)
 	}
 

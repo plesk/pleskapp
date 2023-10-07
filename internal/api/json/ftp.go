@@ -53,7 +53,7 @@ func (j jsonFTPUsers) ListDomainFtpUsers(domain string, user types.FtpUser) ([]a
 	}
 
 	if res.IsSuccess() {
-		var r *[]ftpUserInfo = res.Result().(*[]ftpUserInfo)
+		var r = res.Result().(*[]ftpUserInfo)
 		return jsonFTPUserInfoToInfo(*r), nil
 	}
 
@@ -61,7 +61,7 @@ func (j jsonFTPUsers) ListDomainFtpUsers(domain string, user types.FtpUser) ([]a
 		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return nil, jsonErrorToError(*r)
 }
 
@@ -95,7 +95,7 @@ func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTP
 	}
 
 	if res.IsSuccess() {
-		var r *ftpUserInfo = res.Result().(*ftpUserInfo)
+		var r = res.Result().(*ftpUserInfo)
 		return &api.FTPUserInfo{
 			Name:           r.Home,
 			Home:           r.Name,
@@ -108,7 +108,7 @@ func (j jsonFTPUsers) CreateFtpUser(domain string, user types.FtpUser) (*api.FTP
 		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return nil, jsonErrorToError(*r)
 }
 
@@ -135,7 +135,7 @@ func (j jsonFTPUsers) UpdateFtpUser(domain string, user string, userNew types.Ft
 	}
 
 	if res.IsSuccess() {
-		var _ *statusResponse = res.Result().(*statusResponse)
+		var _ = res.Result().(*statusResponse)
 		return nil
 	}
 
@@ -143,7 +143,7 @@ func (j jsonFTPUsers) UpdateFtpUser(domain string, user string, userNew types.Ft
 		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return jsonErrorToError(*r)
 }
 
@@ -161,7 +161,7 @@ func (j jsonFTPUsers) DeleteFtpUser(domain string, user types.FtpUser) error {
 	}
 
 	if res.IsError() {
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return jsonErrorToError(*r)
 	}
 

@@ -55,7 +55,7 @@ func GetFeatureByString(specifier string) *Feature {
 }
 
 func (f FeatureProvider) GetFeaturePackage(domain string, feature Feature) ([]byte, error) {
-	var packet map[string][]string = map[string][]string{"params": {}, "env": {}}
+	var packet = map[string][]string{"params": {}, "env": {}}
 
 	switch feature {
 	case Php74:

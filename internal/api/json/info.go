@@ -62,7 +62,7 @@ func (j jsonInfo) GetInfo() (api.ServerInfo, error) {
 		return api.ServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return api.ServerInfo{}, jsonErrorToError(*r)
 }
 
@@ -77,7 +77,7 @@ func (j jsonInfo) GetIPAddresses() (types.ServerIPAddresses, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *[]serverIPAddresses = res.Result().(*[]serverIPAddresses)
+		var r = res.Result().(*[]serverIPAddresses)
 		ip := types.ServerIPAddresses{
 			IPv4: []string{},
 			IPv6: []string{},
@@ -98,6 +98,6 @@ func (j jsonInfo) GetIPAddresses() (types.ServerIPAddresses, error) {
 		return types.ServerIPAddresses{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return types.ServerIPAddresses{}, jsonErrorToError(*r)
 }

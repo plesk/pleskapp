@@ -69,7 +69,7 @@ func (j jsonDomains) getDomainSysUser(d string) (string, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		var r = res.Result().(*cliGateResponce)
 		if r.Code != 0 {
 			return "", jsonCliGateResponceToError(*r)
 		}
@@ -88,7 +88,7 @@ func (j jsonDomains) getDomainSysUser(d string) (string, error) {
 		return "", authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return "", errors.New(locales.L.Get("api.errors.domain.info.failed", r.Code, r.Message))
 }
 
@@ -128,7 +128,7 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 	}
 
 	if res.IsSuccess() {
-		var _ *actionDomainResponse = res.Result().(*actionDomainResponse)
+		var _ = res.Result().(*actionDomainResponse)
 		info, err := j.GetDomain(d)
 		return &info, err
 	}
@@ -137,7 +137,7 @@ func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.D
 		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return nil, jsonErrorToError(*r)
 }
 
@@ -166,7 +166,7 @@ func (j jsonDomains) AddDomainFeatures(domain string, featureList []string, isWi
 			}
 
 			if res.IsSuccess() {
-				var r *cliGateResponce = res.Result().(*cliGateResponce)
+				var r = res.Result().(*cliGateResponce)
 				if r.Code == 0 {
 					return nil
 				}
@@ -178,7 +178,7 @@ func (j jsonDomains) AddDomainFeatures(domain string, featureList []string, isWi
 				return authError{server: j.client.HostURL, needReauth: true}
 			}
 
-			var r *jsonError = res.Error().(*jsonError)
+			var r = res.Error().(*jsonError)
 			return jsonErrorToError(*r)
 		}
 	}
@@ -198,7 +198,7 @@ func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *[]domainInfo = res.Result().(*[]domainInfo)
+		var r = res.Result().(*[]domainInfo)
 		if len(*r) == 0 {
 			return api.DomainInfo{}, errors.New(locales.L.Get("errors.domain.unknown", d))
 		}
@@ -223,7 +223,7 @@ func (j jsonDomains) GetDomain(d string) (api.DomainInfo, error) {
 		return api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return api.DomainInfo{}, jsonErrorToError(*r)
 }
 
@@ -246,7 +246,7 @@ func (j jsonDomains) RemoveDomain(d string) error {
 	}
 
 	if res.IsError() {
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return jsonErrorToError(*r)
 	}
 
@@ -264,7 +264,7 @@ func (j jsonDomains) ListDomains() ([]api.DomainInfo, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *[]domainInfo = res.Result().(*[]domainInfo)
+		var r = res.Result().(*[]domainInfo)
 		return jsonDomainInfoToInfo(*r), nil
 	}
 
@@ -272,6 +272,6 @@ func (j jsonDomains) ListDomains() ([]api.DomainInfo, error) {
 		return []api.DomainInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return []api.DomainInfo{}, jsonErrorToError(*r)
 }

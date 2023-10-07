@@ -47,7 +47,7 @@ func (j jsonDatabases) ListDatabases() ([]api.DatabaseInfo, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *[]databaseInfo = res.Result().(*[]databaseInfo)
+		var r = res.Result().(*[]databaseInfo)
 		return jsonDatabaseInfoToInfo(*r), err
 	}
 
@@ -55,7 +55,7 @@ func (j jsonDatabases) ListDatabases() ([]api.DatabaseInfo, error) {
 		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return jsonDatabaseInfoToInfo([]databaseInfo{}), errors.New(locales.L.Get("api.errors.failed.request", r.Code, r.Message, r.Errors))
 }
 
@@ -71,7 +71,7 @@ func (j jsonDatabases) ListDomainDatabases(domain string) ([]api.DatabaseInfo, e
 	}
 
 	if res.IsSuccess() {
-		var r *[]databaseInfo = res.Result().(*[]databaseInfo)
+		var r = res.Result().(*[]databaseInfo)
 		return jsonDatabaseInfoToInfo(*r), err
 	}
 
@@ -79,7 +79,7 @@ func (j jsonDatabases) ListDomainDatabases(domain string) ([]api.DatabaseInfo, e
 		return jsonDatabaseInfoToInfo([]databaseInfo{}), authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return jsonDatabaseInfoToInfo([]databaseInfo{}), jsonErrorToError(*r)
 }
 
@@ -108,7 +108,7 @@ func (j jsonDatabases) CreateDatabase(domain types.Domain, db types.NewDatabase,
 	}
 
 	if res.IsSuccess() {
-		var r *databaseInfo = res.Result().(*databaseInfo)
+		var r = res.Result().(*databaseInfo)
 		return &api.DatabaseInfo{
 			ID:               r.ID,
 			Name:             r.Name,
@@ -122,7 +122,7 @@ func (j jsonDatabases) CreateDatabase(domain types.Domain, db types.NewDatabase,
 		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return nil, jsonErrorToError(*r)
 }
 
@@ -140,7 +140,7 @@ func (j jsonDatabases) RemoveDatabase(db types.Database) error {
 	}
 
 	if res.IsError() {
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return jsonErrorToError(*r)
 	}
 
@@ -209,7 +209,7 @@ func (j jsonDatabases) DeployDatabase(
 	}
 
 	if res.IsSuccess() {
-		var r *cliGateResponce = res.Result().(*cliGateResponce)
+		var r = res.Result().(*cliGateResponce)
 		if r.Code != 0 || len(r.Stderr) != 0 {
 			return jsonCliGateResponceToError(*r)
 		}
@@ -219,7 +219,7 @@ func (j jsonDatabases) DeployDatabase(
 		return authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return jsonErrorToError(*r)
 }
 
@@ -234,7 +234,7 @@ func (j jsonDatabases) ListDatabaseServers() ([]api.DatabaseServerInfo, error) {
 	}
 
 	if res.IsSuccess() {
-		var r *[]databaseServerInfo = res.Result().(*[]databaseServerInfo)
+		var r = res.Result().(*[]databaseServerInfo)
 		return jsonDatabaseServerInfoToInfo(*r), err
 	}
 
@@ -242,7 +242,7 @@ func (j jsonDatabases) ListDatabaseServers() ([]api.DatabaseServerInfo, error) {
 		return []api.DatabaseServerInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return []api.DatabaseServerInfo{}, jsonErrorToError(*r)
 }
 
@@ -268,7 +268,7 @@ func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDat
 	}
 
 	if res.IsSuccess() {
-		var r *databaseUserInfo = res.Result().(*databaseUserInfo)
+		var r = res.Result().(*databaseUserInfo)
 		return &api.DatabaseUserInfo{
 			ID:         r.ID,
 			Login:      r.Login,
@@ -280,7 +280,7 @@ func (j jsonDatabases) CreateDatabaseUser(db types.Database, dbuser types.NewDat
 		return nil, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return nil, jsonErrorToError(*r)
 }
 
@@ -298,7 +298,7 @@ func (j jsonDatabases) RemoveDatabaseUser(dbu types.DatabaseUser) error {
 	}
 
 	if res.IsError() {
-		var r *jsonError = res.Error().(*jsonError)
+		var r = res.Error().(*jsonError)
 		return jsonErrorToError(*r)
 	}
 
@@ -317,7 +317,7 @@ func (j jsonDatabases) ListDatabaseUsers(db types.Database) ([]api.DatabaseUserI
 	}
 
 	if res.IsSuccess() {
-		var r *[]databaseUserInfo = res.Result().(*[]databaseUserInfo)
+		var r = res.Result().(*[]databaseUserInfo)
 		return jsonDatabaseUserInfoToInfo(*r), err
 	}
 
@@ -325,6 +325,6 @@ func (j jsonDatabases) ListDatabaseUsers(db types.Database) ([]api.DatabaseUserI
 		return []api.DatabaseUserInfo{}, authError{server: j.client.HostURL, needReauth: true}
 	}
 
-	var r *jsonError = res.Error().(*jsonError)
+	var r = res.Error().(*jsonError)
 	return []api.DatabaseUserInfo{}, jsonErrorToError(*r)
 }
