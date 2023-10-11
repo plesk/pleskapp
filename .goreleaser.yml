@@ -20,12 +20,14 @@ builds:
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
 archives:
-  - name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
-    replacements:
-      darwin: mac
-      linux: linux
-      windows: win
-      amd64: x86_64
+  - name_template: >-
+      {{- .ProjectName }}-
+      {{- .Version }}-
+      {{- if eq .Os "darwin" }}mac
+      {{- else if eq .Os "windows" }}win
+      {{- else }}{{ .Os }}{{ end }}-
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
     format: tar.gz
     format_overrides:
       - goos: windows

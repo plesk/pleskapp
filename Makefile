@@ -13,7 +13,7 @@ build: test
 	go build -ldflags "$(LDFLAGS)"
 
 release: test
-	goreleaser release --rm-dist
+	goreleaser release --clean
 
 run:
 	go run main.go
