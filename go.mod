@@ -1,4 +1,4 @@
-// Copyright 1999-2023. Plesk International GmbH.
+// Copyright 1999-2024. Plesk International GmbH.
 
 module github.com/plesk/pleskapp/plesk
 
