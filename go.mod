@@ -2,7 +2,7 @@
 
 module github.com/plesk/pleskapp/plesk
 
-go 1.21
+go 1.22
 
 require (
 	github.com/go-resty/resty/v2 v2.12.0
