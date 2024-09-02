@@ -2,7 +2,10 @@
 
 package json
 
-import "github.com/plesk/pleskapp/plesk/internal/locales"
+import (
+	"github.com/plesk/pleskapp/plesk/internal/locales"
+	"net/url"
+)
 
 type jsonError struct {
 	Code    int              `json:"code"`
@@ -88,8 +91,14 @@ type authError struct {
 }
 
 func (e authError) Error() string {
-	if e.needReauth {
-		return locales.L.Get("api.errors.auth.failed.reauth", e.server)
+	serverUrl, err := url.Parse(e.server)
+	host := e.server
+	if err == nil {
+		host = serverUrl.Hostname()
 	}
-	return locales.L.Get("api.errors.auth.wrong.pass", e.server)
+
+	if e.needReauth {
+		return locales.L.Get("api.errors.auth.failed.reauth", host)
+	}
+	return locales.L.Get("api.errors.auth.wrong.pass", host)
 }
