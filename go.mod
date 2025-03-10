@@ -2,7 +2,10 @@
 
 module github.com/plesk/pleskapp/plesk
 
-go 1.23
+go 1.23.0
+
+toolchain go1.23.4
+
 require (
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/jlaffaye/ftp v0.2.0
