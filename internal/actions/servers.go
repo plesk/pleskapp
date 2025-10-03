@@ -56,7 +56,7 @@ func getServerInfo(a types.ServerAuth) (*api.ServerInfo, *types.ServerIPAddresse
 func ServerAdd(host string, ignoreSsl bool) error {
 	_, err := config.GetServer(host)
 	if err == nil {
-		return fmt.Errorf("Server with address " + host + " is already registered")
+		return fmt.Errorf("Server with address %s is already registered", host)
 	}
 	login := AdminUser
 	pass, err := utils.RequestPassword("Enter \"admin\" user password for server " + host + ":")

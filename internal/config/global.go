@@ -76,7 +76,7 @@ func GetServer(host string) (*types.Server, error) {
 	}
 
 	if found > 1 {
-		return nil, fmt.Errorf(locales.L.Get("errors.multiple.servers", host))
+		return nil, fmt.Errorf("%s", locales.L.Get("errors.multiple.servers", host))
 	}
 
 	return nil, types.ServerNotFound{Server: host}
