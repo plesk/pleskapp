@@ -1,5 +1,5 @@
 #!/bin/bash
-### Copyright 1999-2024. Plesk International GmbH.
+### Copyright 1999-2026. WebPros International GmbH.
 
 set -e
 
