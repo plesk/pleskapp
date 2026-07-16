@@ -28,7 +28,13 @@ Here is the list of features:
 
 # Installation
 
-Here is the command to install the utility:
+Installation using Homebrew:
+
+```
+brew install plesk/plesk/plesk
+```
+
+Installation using shell script:
 
 ```
 curl -fsSL https://raw.githubusercontent.com/plesk/pleskapp/master/install.sh | bash
