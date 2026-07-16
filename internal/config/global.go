@@ -7,10 +7,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 
 	"github.com/plesk/pleskapp/plesk/internal/types"
 	"github.com/plesk/pleskapp/plesk/internal/utils"

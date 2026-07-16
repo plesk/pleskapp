@@ -5,14 +5,15 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
+	"strings"
+
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"
 	"github.com/spf13/cobra"
-	"os"
-	"path"
-	"strings"
 )
 
 var deployCmd = &cobra.Command{

@@ -3,8 +3,9 @@
 package json
 
 import (
-	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"net/url"
+
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 )
 
 type jsonError struct {

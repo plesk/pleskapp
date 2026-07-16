@@ -4,11 +4,12 @@ package actions
 
 import (
 	"fmt"
-	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/plesk/pleskapp/plesk/internal/locales"
 
 	"github.com/plesk/pleskapp/plesk/internal/api/factory"
 	"github.com/plesk/pleskapp/plesk/internal/types"

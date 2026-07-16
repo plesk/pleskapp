@@ -4,10 +4,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/plesk/pleskapp/plesk/cmd"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
-	"os"
 )
 
 var (

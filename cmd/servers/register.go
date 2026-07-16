@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/plesk/pleskapp/plesk/internal/types"

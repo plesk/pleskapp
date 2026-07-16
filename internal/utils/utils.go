@@ -4,11 +4,12 @@ package utils
 
 import (
 	"fmt"
-	"github.com/plesk/pleskapp/plesk/internal/types"
-	"golang.org/x/term"
 	"math/rand"
 	"strings"
 	"syscall"
+
+	"github.com/plesk/pleskapp/plesk/internal/types"
+	"golang.org/x/term"
 )
 
 const allowedChars = "abcdefghijklmnopqrstuvwxyz"

@@ -3,9 +3,10 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var completionCmd = &cobra.Command{

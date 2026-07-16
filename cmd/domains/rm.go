@@ -4,11 +4,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/plesk/pleskapp/plesk/internal/actions"
 	"github.com/plesk/pleskapp/plesk/internal/config"
 	"github.com/plesk/pleskapp/plesk/internal/locales"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 var deleteCmd = &cobra.Command{
