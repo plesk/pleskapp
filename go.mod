@@ -6,7 +6,7 @@ go 1.26
 
 require (
 	github.com/go-resty/resty/v2 v2.17.2
-	github.com/jlaffaye/ftp v0.2.2
+	github.com/jlaffaye/ftp v0.2.4
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.12.1
