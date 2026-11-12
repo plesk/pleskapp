@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "extension_release": "17809",
+    "extension_version": "2.4.7",
+    "guid": "2a05f76b-a05f-4267-b7c9-f83a6ec47104",
+    "hostname": "plesk.example.com",
+    "panel_build_date": "2026-09-08",
+    "panel_revision": "c90b57d24b478e9f350eff5f4bd2a3378656e2cd",
+    "panel_update_version": "0",
+    "panel_version": "18.0.81",
+    "platform": "Unix"
+  }
+}
