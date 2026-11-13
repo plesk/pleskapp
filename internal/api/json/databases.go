@@ -213,6 +213,8 @@ func (j jsonDatabases) DeployDatabase(
 		if r.Code != 0 || len(r.Stderr) != 0 {
 			return jsonCliGateResponceToError(*r)
 		}
+
+		return nil
 	}
 
 	if res.StatusCode() == 403 {
