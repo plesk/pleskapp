@@ -1,0 +1,8 @@
+{
+  "status": 403,
+  "content_type": "application/json",
+  "body": {
+    "code": 0,
+    "message": "Access denied."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "code": 0,
+    "stdout": "Hosting Settings\n=================\nHosting type:                            virtual\nCustom SSL certificate:                  false\nIP Address:                             192.0.2.10\nFTP Login:                               example_com\nHome:                                    /var/www/vhosts/example.com\n",
+    "stderr": ""
+  }
+}
