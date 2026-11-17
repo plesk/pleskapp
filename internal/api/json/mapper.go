@@ -84,10 +84,6 @@ func jsonDatabaseServerInfoToInfo(dbss []databaseServerInfo) []api.DatabaseServe
 	return db
 }
 
-func jsonCliGateResponceToError(r cliGateResponce) error {
-	return errors.New(locales.L.Get("api.errors.cligate.error.responce", r.Code, r.Stdout, r.Stderr))
-}
-
 func jsonErrorToError(e jsonError) error {
 	return errors.New(locales.L.Get("api.errors.failed.request", e.Code, e.Message, e.Errors))
 }

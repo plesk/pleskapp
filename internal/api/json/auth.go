@@ -71,83 +71,43 @@ func (j Auth) GetAPIKey(a api.Auth) (string, error) {
 		return "", errors.New(locales.L.Get("api.errors.auth.cli.failed", r.Code, r.Message))
 	}
 
-	p := cliGateRequest{
+	r, err := callCli(j.client, "secret_key", cliGateRequest{
 		Params: []string{
 			"--create",
 			"-description",
 			"PleskApp API key",
 		},
 		Env: map[string]string{},
-	}
-	req, err := json.Marshal(p)
-	if err != nil {
-		return "", err
-	}
+	})
 
-	res, err := j.client.R().
-		SetBody(req).
-		SetResult(&cliGateResponce{}).
-		SetError(&jsonError{}).
-		Post("/api/v2/cli/secret_key/call")
-
-	if err != nil {
-		return "", err
+	if authErr, ok := errors.AsType[authError](err); ok {
+		authErr.needReauth = false
+		return "", authErr
 	}
 
-	if res.IsSuccess() {
-		var r = res.Result().(*cliGateResponce)
-		if r.Code == 0 {
-			return r.Stdout, nil
-		}
-
-		return "", errors.New(locales.L.Get("api.errors.auth.failed", r.Stderr))
-	}
-
-	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.BaseURL, needReauth: false}
-	}
-
-	var r = res.Error().(*jsonError)
-	return "", jsonErrorToError(*r)
+	return authCliStdout(r, err)
 }
 
 func (j Auth) GetLoginLink(auth api.Auth) (string, error) {
-	p := cliGateRequest{
+	r, err := callCli(j.client, "admin", cliGateRequest{
 		Params: []string{
 			"--get-login-link",
 		},
 		Env: map[string]string{},
+	})
+
+	return authCliStdout(r, err)
+}
+
+func authCliStdout(r cliGateResponce, err error) (string, error) {
+	if gateErr, ok := errors.AsType[cliGateError](err); ok {
+		return "", errors.New(locales.L.Get("api.errors.auth.failed", gateErr.reply.Stderr))
 	}
-	req, err := json.Marshal(p)
 	if err != nil {
 		return "", err
 	}
 
-	res, err := j.client.R().
-		SetBody(req).
-		SetResult(&cliGateResponce{}).
-		SetError(&jsonError{}).
-		Post("/api/v2/cli/admin/call")
-
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsSuccess() {
-		var r = res.Result().(*cliGateResponce)
-		if r.Code == 0 {
-			return r.Stdout, nil
-		}
-
-		return "", errors.New(locales.L.Get("api.errors.auth.failed", r.Stderr))
-	}
-
-	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.BaseURL, needReauth: true}
-	}
-
-	var r = res.Error().(*jsonError)
-	return "", jsonErrorToError(*r)
+	return r.Stdout, nil
 }
 
 // RemoveAPIKey removes API key via REST CLI Gate
