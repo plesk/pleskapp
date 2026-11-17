@@ -3,7 +3,6 @@
 package features
 
 import (
-	"encoding/json"
 	"errors"
 	"strings"
 
@@ -54,9 +53,7 @@ func GetFeatureByString(specifier string) *Feature {
 	return nil
 }
 
-func (f FeatureProvider) GetFeaturePackage(domain string, feature Feature) ([]byte, error) {
-	var packet = map[string][]string{"params": {}, "env": {}}
-
+func (f FeatureProvider) GetFeatureParams(domain string, feature Feature) ([]string, error) {
 	switch feature {
 	case Php74:
 		fallthrough
@@ -68,20 +65,16 @@ func (f FeatureProvider) GetFeaturePackage(domain string, feature Feature) ([]by
 		fallthrough
 	case Php70:
 		if !f.IsWindows {
-			packet["params"] = []string{"--update", domain, "-php", "true", "-php_handler_id", "plesk-" + string(feature) + "-fpm"}
-		} else {
-			ver := strings.Split(strings.TrimPrefix(string(feature), "php"), "")
-			packet["params"] = []string{"--update", domain, "-php", "true", "-php_handler_id", "fastcgi-" + ver[0] + "." + ver[1]}
+			return []string{"--update", domain, "-php", "true", "-php_handler_id", "plesk-" + string(feature) + "-fpm"}, nil
 		}
+		ver := strings.Split(strings.TrimPrefix(string(feature), "php"), "")
+		return []string{"--update", domain, "-php", "true", "-php_handler_id", "fastcgi-" + ver[0] + "." + ver[1]}, nil
 	case Nginx:
 		if f.IsWindows {
-			return []byte{}, errors.New(locales.L.Get("errors.feature.not.supported", string(feature)))
+			return nil, errors.New(locales.L.Get("errors.feature.not.supported", string(feature)))
 		}
-		packet["params"] = []string{"--update", domain, "-nginx-serve-php", "true"}
+		return []string{"--update", domain, "-nginx-serve-php", "true"}, nil
 	default:
-		return []byte{}, errors.New(locales.L.Get("errors.feature.unknown", string(feature)))
+		return nil, errors.New(locales.L.Get("errors.feature.unknown", string(feature)))
 	}
-
-	jsonPacket, err := json.Marshal(packet)
-	return jsonPacket, err
 }
