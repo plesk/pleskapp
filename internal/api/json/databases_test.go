@@ -91,6 +91,16 @@ func TestDeployDatabaseSendsTheParamsOfEachPlatform(t *testing.T) {
 	}
 }
 
+func TestDeployDatabaseGivesNoErrorWhenTheCliGateSucceeds(t *testing.T) {
+	_, c := startServer(t, map[string]reply{
+		dbbackupPath: jsonReply(http.StatusOK, `{"code":0,"stdout":"Restore is done.\n","stderr":""}`),
+	})
+
+	err := NewDatabases(c).DeployDatabase(deployDB, deployDBUser, deployDBServer, "/tmp/dump.sql", false, nil)
+
+	assert.NoError(t, err)
+}
+
 func TestDeployDatabaseGivesAnErrorWhenTheCliGateWritesToStderr(t *testing.T) {
 	_, c := startServer(t, map[string]reply{
 		dbbackupPath: jsonReply(http.StatusOK, `{"code":0,"stdout":"","stderr":"Warning: the dump has errors\n"}`),
