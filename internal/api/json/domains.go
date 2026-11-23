@@ -46,50 +46,28 @@ func NewDomains(c *resty.Client) jsonDomains {
 
 // TODO: Make sure REST API returns sysuser on GET /api/v2/domains
 func (j jsonDomains) getDomainSysUser(d string) (string, error) {
-	p := cliGateRequest{
+	r, err := callCli(j.client, "domain", cliGateRequest{
 		Params: []string{
 			"--info",
 			d,
 		},
 		Env: map[string]string{},
+	})
+	if reqErr, ok := errors.AsType[requestError](err); ok {
+		return "", errors.New(locales.L.Get("api.errors.domain.info.failed", reqErr.reply.Code, reqErr.reply.Message))
 	}
-	req, err := json.Marshal(p)
 	if err != nil {
 		return "", err
 	}
 
-	res, err := j.client.R().
-		SetBody(req).
-		SetResult(&cliGateResponce{}).
-		SetError(&jsonError{}).
-		Post("/api/v2/cli/domain/call")
-
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsSuccess() {
-		var r = res.Result().(*cliGateResponce)
-		if r.Code != 0 {
-			return "", jsonCliGateResponceToError(*r)
+	for _, l := range strings.Split(r.Stdout, "\n") {
+		if strings.HasPrefix(l, "FTP Login") {
+			p := strings.Split(l, " ")
+			return p[len(p)-1], nil
 		}
-
-		for _, l := range strings.Split(r.Stdout, "\n") {
-			if strings.HasPrefix(l, "FTP Login") {
-				p := strings.Split(l, " ")
-				return p[len(p)-1], nil
-			}
-		}
-
-		return "", errors.New(locales.L.Get("api.errors.domain.info.not.found"))
 	}
 
-	if res.StatusCode() == 403 {
-		return "", authError{server: j.client.BaseURL, needReauth: true}
-	}
-
-	var r = res.Error().(*jsonError)
-	return "", errors.New(locales.L.Get("api.errors.domain.info.failed", r.Code, r.Message))
+	return "", errors.New(locales.L.Get("api.errors.domain.info.not.found"))
 }
 
 func (j jsonDomains) CreateDomain(d string, ipa types.ServerIPAddresses) (*api.DomainInfo, error) {
@@ -150,36 +128,16 @@ func (j jsonDomains) AddDomainFeatures(domain string, featureList []string, isWi
 		feature := features.GetFeatureByString(featureStr)
 
 		if feature != nil {
-			p, err := featureProvider.GetFeaturePackage(domain, *feature)
+			params, err := featureProvider.GetFeatureParams(domain, *feature)
 			if err != nil {
 				return err
 			}
 
-			res, err := j.client.R().
-				SetBody(p).
-				SetResult(&cliGateResponce{}).
-				SetError(&jsonError{}).
-				Post("/api/v2/cli/domain/call")
-
-			if err != nil {
-				return err
-			}
-
-			if res.IsSuccess() {
-				var r = res.Result().(*cliGateResponce)
-				if r.Code == 0 {
-					return nil
-				}
-
-				return jsonCliGateResponceToError(*r)
-			}
-
-			if res.StatusCode() == 403 {
-				return authError{server: j.client.BaseURL, needReauth: true}
-			}
-
-			var r = res.Error().(*jsonError)
-			return jsonErrorToError(*r)
+			_, err = callCli(j.client, "domain", cliGateRequest{
+				Params: params,
+				Env:    map[string]string{},
+			})
+			return err
 		}
 	}
 

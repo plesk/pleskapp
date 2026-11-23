@@ -142,9 +142,6 @@ func decodeCliGateCall(t *testing.T, body []byte) cliGateCall {
 
 	call := cliGateCall{Env: map[string]string{}}
 	require.NoError(t, json.Unmarshal(fields["params"], &call.Params), "decode the params of the body %s", body)
-	if string(fields["env"]) == "[]" {
-		return call
-	}
 	require.NoError(t, json.Unmarshal(fields["env"], &call.Env), "decode the env of the body %s", body)
 	return call
 }

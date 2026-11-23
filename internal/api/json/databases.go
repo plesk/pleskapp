@@ -193,36 +193,15 @@ func (j jsonDatabases) DeployDatabase(
 		}
 	}
 
-	req, err := json.Marshal(p)
+	r, err := callCli(j.client, "dbbackup", p)
 	if err != nil {
 		return err
 	}
-
-	res, err := j.client.R().
-		SetBody(req).
-		SetResult(&cliGateResponce{}).
-		SetError(&jsonError{}).
-		Post("/api/v2/cli/dbbackup/call")
-
-	if err != nil {
-		return err
+	if len(r.Stderr) != 0 {
+		return cliGateError{reply: r}
 	}
 
-	if res.IsSuccess() {
-		var r = res.Result().(*cliGateResponce)
-		if r.Code != 0 || len(r.Stderr) != 0 {
-			return jsonCliGateResponceToError(*r)
-		}
-
-		return nil
-	}
-
-	if res.StatusCode() == 403 {
-		return authError{server: j.client.BaseURL, needReauth: true}
-	}
-
-	var r = res.Error().(*jsonError)
-	return jsonErrorToError(*r)
+	return nil
 }
 
 func (j jsonDatabases) ListDatabaseServers() ([]api.DatabaseServerInfo, error) {
